@@ -1,0 +1,75 @@
+Conectar à base de dados da ua
+
+
+
+É NECESSÁRIO TER A VPN DA UA LIGADA
+
+Conectar o netbeans à base de dados
+
+1. windows -> services -> database -> register MYSQL Server
+
+For linux:
+
+1. Path to start command: /usr/bin/mysql
+2. Arguments: /etc/init.d/mysql start
+3. Path to Stop command: /usr/bin/mysql
+4. Arguments: /etc/init.d/mysql stop
+
+For windows:
+
+1. Path/URL to admin tool: C:\Program Files\MySQL\MySQL Workbench CE 5.2.47\MySQLWorkbench.exe
+2. Arguments: (Leave blank)
+3. Path to start command: C:\mysql\bin\mysqld (OR C:\mysql\bin\mysqld.exe)
+4. Arguments: (Leave blank)
+5. Path to Stop command: C:\mysql\bin\mysqladmin (OR C:\mysql\bin\mysqladmin.exe )
+6. Arguments: -u root shutdown (Try -u root stop)
+
+2. database -> new conection
+3. download conector java and add to netbeans
+	path for linux: /usr/share/java/mysql-connector-java-8.0.17.jar
+	pah for windows: i dont know
+	
+	host: estga-dev.clients.ua.pt
+	username: ptda-2020-gr1
+	password: snh_936=i
+	port: 3306
+	
+	copy jbc url
+	
+	finish
+	
+4. create a project 
+	add a connector library
+		1. right click -> project properties -> libraries -> classpath -> add jar/folder -> add connector
+		
+5. create a class, copy the code bottom and run
+
+	
+import java.sql.*;
+
+public class testeSQL {
+    public static void main(String[] args) throws Exception {
+        String url = ""; //paste jbc url
+        String username = "ptda-2020-gr1";
+        String password = "snh_936=i";
+        String driver = "com.mysql.cj.jdbc.Driver";
+
+        Class.forName(driver);
+        
+        try {
+		Connection conn = DriverManager.getConnection(url, username, password);
+		Statement st = conn.createStatement();
+		String sqlStr = "select * from Categoria";
+		ResultSet rs = st.executeQuery(sqlStr);
+		while (rs.next()) {
+			System.out.println(rs.getString("ID"));
+		}
+			
+		} catch (SQLException e) {
+			System.out.println("Connection to MySQL db failed");
+		 e.printStackTrace();
+		}
+	
+    }
+}
+
