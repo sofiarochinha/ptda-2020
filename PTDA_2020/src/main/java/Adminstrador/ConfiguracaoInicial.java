@@ -21,17 +21,17 @@ public class ConfiguracaoInicial extends javax.swing.JFrame {
     /**
      * Creates new form ConfiguraçãoInicial
      */
-    DesignConfiguracaoInicial design = new DesignConfiguracaoInicial();
+    DesignConfiguracaoInicial design = new DesignConfiguracaoInicial(this);
     
     public ConfiguracaoInicial() {
         initComponents();
         
-        design.titulo(titulo, this);
-        design.label(textoNumeroMesas, this);
-        design.spinner(spinner, this);
-        design.textoErro(erro, this); //nao se vou usar mas vou deixar ficar
-        design.BotaoCancelar(botaoCancelar, this);
-        design.BotaoProximo(BotaoProximo, this);
+        design.titulo(titulo);
+        design.label(textoNumeroMesas);
+        design.spinner(spinner);
+        design.textoErro(erro); //nao se vou usar mas vou deixar ficar
+        design.BotaoCancelar(botaoCancelar);
+        design.BotaoProximo(BotaoProximo);
         erro.setVisible(false); // nao se vou usar mas vou deixar ficar
 
     }
@@ -138,7 +138,7 @@ public class ConfiguracaoInicial extends javax.swing.JFrame {
 
         try {
             ce.inserirNumMesas(num);
-            MostarInterface mi = new MostarInterface(this, new AdicionarProduto());
+            MostrarInterface mi = new MostrarInterface(this, new AdicionarProduto());
             mi.start();
             
         } catch (ClassNotFoundException | SQLException ex) {

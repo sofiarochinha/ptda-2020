@@ -17,13 +17,15 @@ import javax.swing.JTextField;
  */
 public class DesignConfigurarConta extends Design{
 
-    public DesignConfigurarConta() {
+    JFrame frame;
     
-        super();
+    public DesignConfigurarConta(JFrame frame) {
+        super(frame);
+        this.frame = frame;
     }
     
     
-    public void textField( JTextField nomeUtilizador, JPasswordField novaPasse, JPasswordField repetirPasse, JFrame frame){
+    public void textField( JTextField nomeUtilizador, JPasswordField novaPasse, JPasswordField repetirPasse){
      
          frame.setLayout(null);
          
@@ -39,21 +41,21 @@ public class DesignConfigurarConta extends Design{
     
     }
     
-    public void label(JLabel textoNomeUtilizador, JLabel textoPasse, JLabel textoRepetirPasse, JFrame frame){
+    public void label(JLabel textoNomeUtilizador, JLabel textoPasse, JLabel textoRepetirPasse){
     
-        Dimension sizeNomeLabel = textoNomeUtilizador.getPreferredSize();
-        Dimension sizePasseLabel = textoNomeUtilizador.getPreferredSize();
-        Dimension sizeRepetirPasseLabel = textoNomeUtilizador.getPreferredSize();
+        Dimension sizeNome = textoNomeUtilizador.getPreferredSize();
+        Dimension sizePasse = textoNomeUtilizador.getPreferredSize();
+        Dimension sizeRepetirPasse = textoNomeUtilizador.getPreferredSize();
         frame.setLayout(null);
         
         
-        textoNomeUtilizador.setBounds((frame.getSize().width/2)-(textoNomeUtilizador.getSize().width)-15, (frame.getSize().height/2)-170, sizeNomeLabel.width, sizeNomeLabel.height);
-        textoPasse.setBounds((frame.getSize().width/2)-(textoPasse.getSize().width)-60, (frame.getSize().height/2)-80, sizePasseLabel.width, sizePasseLabel.height);
+        textoNomeUtilizador.setBounds((frame.getSize().width/2)-(textoNomeUtilizador.getSize().width)-15, (frame.getSize().height/2)-170, sizeNome.width, sizeNome.height);
+        textoPasse.setBounds((frame.getSize().width/2)-(textoPasse.getSize().width)-60, (frame.getSize().height/2)-80, sizePasse.width, sizePasse.height);
         
-        textoRepetirPasse.setBounds((frame.getSize().width/2)-(textoRepetirPasse.getSize().width)-35, (frame.getSize().height)-265, sizeRepetirPasseLabel.width, sizeRepetirPasseLabel.height);
+        textoRepetirPasse.setBounds((frame.getSize().width/2)-(textoRepetirPasse.getSize().width)-35, (frame.getSize().height)-265, sizeRepetirPasse.width, sizeRepetirPasse.height);
     }
     
-    public void textoErro(JLabel erro, JFrame frame){
+    public void textoErro(JLabel erro){
         
         super.textoErro(erro);
         

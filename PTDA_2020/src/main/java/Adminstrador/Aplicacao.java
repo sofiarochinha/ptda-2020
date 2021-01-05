@@ -7,7 +7,7 @@ package Adminstrador;
 
 import BD.*;
 import Design.*;
-import Thread.MostarInterface;
+import Thread.MostrarInterface;
 import java.awt.DisplayMode;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
@@ -34,7 +34,7 @@ public class Aplicacao extends javax.swing.JFrame {
     private String tipoFuncionario = null;
     private Identidade c = new Identidade();
     
-    private Design design = new Design();
+    private Design design = new Design(this);
     
     public Aplicacao() {
         initComponents();
@@ -42,7 +42,7 @@ public class Aplicacao extends javax.swing.JFrame {
         
         this.setVisible(true);
         
-        MostarInterface mi = new MostarInterface(this, this);
+        MostrarInterface mi = new MostrarInterface(this, this);
         mi.start();
         
         erro.setVisible(false);
@@ -51,9 +51,9 @@ public class Aplicacao extends javax.swing.JFrame {
         buttonGroup1.add(BotaoEmpregadoMesa);
         
         //design dos componentes
-        design.BotaoCentro(BotaoSessao,this);
+        design.BotaoCentro(BotaoSessao);
         design.textoErro(erro);
-        design.titulo(tituloSessao, this);
+        design.titulo(tituloSessao);
         
         
     }
@@ -222,7 +222,7 @@ public class Aplicacao extends javax.swing.JFrame {
                 //verifica se o username e a password sao coincidentes  
                 if(c.verPassword(tipoFuncionario,escreverUsername.getText(), escreverPassword.getText())){
                     
-                    MostarInterface mi = new MostarInterface(this, new ConfigurarConta());
+                    MostrarInterface mi = new MostrarInterface(this, new ConfigurarConta());
                     mi.start();
                 }
                 

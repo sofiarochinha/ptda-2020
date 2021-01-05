@@ -1,8 +1,5 @@
 package BD;
 
-//String databaseURL = "jdbc:mysql://estga-dev.clients.ua.pt:3306/ptda2020gr1db";
-//String user = "ptda-2020-gr1";
-//String password = "snh_936=i";
 //comandos SQL
 //select * from Categoria" -> selecionar tudo da tabela categoria
 //ResultSet rs = preparedStmtSelect.getResultSet();
@@ -17,22 +14,15 @@ import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Identidade {
+public class Identidade extends ConexaoBD{
 
-    String url = "jdbc:mysql://estga-dev.clients.ua.pt:3306/ptda2020gr1db";
-    String username = "ptda-2020-gr1";
-    String password = "snh_936=i";
-    String driver = "com.mysql.cj.jdbc.Driver";
-
+    
     public boolean verPassword(String tipoFuncionario, String nome, String pass) throws ClassNotFoundException, SQLException {
 
-        Class.forName(driver);
-
-        Connection conn = DriverManager.getConnection(url, username, password);
 
         String query = "select * from Funcionario where Funcao like" + tipoFuncionario;
 
-        PreparedStatement preparedStmtSelect = conn.prepareStatement(query);
+        PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
         preparedStmtSelect.execute();
 
         ResultSet rs = preparedStmtSelect.getResultSet();
@@ -43,20 +33,16 @@ public class Identidade {
             }
         }
 
-        conn.close();
+        super.conexao().close();
 
         return false;
     }
 
     public boolean verNomeUtilizadorRepetido(String nomeUtilizador) throws ClassNotFoundException, SQLException {
 
-        Class.forName(driver);
-
-        Connection conn = DriverManager.getConnection(url, username, password);
-
         String query = "select * from Funcionario where Funcao like 'Admin'";
 
-        PreparedStatement preparedStmtSelect = conn.prepareStatement(query);
+        PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
         preparedStmtSelect.execute();
 
         ResultSet rs = preparedStmtSelect.getResultSet();
@@ -67,19 +53,15 @@ public class Identidade {
 
         }
 
-        conn.close();
+        super.conexao().close();
         return true;
     }
 
     public void mudarNomePasse(String nomeUtilizador, String palavraPasse) throws ClassNotFoundException, SQLException {
 
-        Class.forName(driver);
-
-        Connection conn = DriverManager.getConnection(url, username, password);
-
         String query = "update Funcionario set Nome_Utilizador = ? where Funcao = ?";
 
-        PreparedStatement preparedStmtUpdate = conn.prepareStatement(query);
+        PreparedStatement preparedStmtUpdate = super.conexao().prepareStatement(query);
         preparedStmtUpdate.setString(1, nomeUtilizador);
         preparedStmtUpdate.setString(2, "Admin");
 
@@ -87,13 +69,13 @@ public class Identidade {
 
         query = "update Funcionario set Palavra_passe = ? where Funcao = ?";
 
-        preparedStmtUpdate = conn.prepareStatement(query);
+        preparedStmtUpdate = super.conexao().prepareStatement(query);
         preparedStmtUpdate.setString(1, palavraPasse);
         preparedStmtUpdate.setString(2, "Admin");
 
         preparedStmtUpdate.execute();
        
-        conn.close();
+        super.conexao().close();
     }
 
     

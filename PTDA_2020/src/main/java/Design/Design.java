@@ -6,25 +6,23 @@
 package Design;
 
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.border.Border;
 import java.awt.Dimension;
 import java.awt.Font;
-import javax.swing.JPasswordField;
 import javax.swing.JProgressBar;
-import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
 /**
  *
  * @author sofia
  */
 public class Design {
     
+    JFrame frame;
+    
+    public Design(JFrame frame){
+        this.frame = frame;
+    }
     /**
      * Coloca todos os textos de erro a vermelho e com uma fonte pré-definida
      * @param nome 
@@ -38,43 +36,43 @@ public class Design {
      * @param nome
      * @param o 
      */
-    public void titulo(JLabel nome, JFrame o){
+    public void titulo(JLabel nome){
         
         Dimension size = nome.getPreferredSize();
-        o.setLayout(null);
+        frame.setLayout(null);
               
         //centrar o titulo
-        nome.setBounds((o.getSize().width/2)-(nome.getSize().width/2), (o.getSize().height/2)-250, size.width, size.height);
+        nome.setBounds((frame.getSize().width/2)-(nome.getSize().width/2), (frame.getSize().height/2)-250, size.width, size.height);
         nome.setFont(new Font("SansSerif", Font.PLAIN, 36));
        
     }
     
     
-    public void BotaoProximo(JButton botao, JFrame o){
+    public void BotaoProximo(JButton botao){
          
         Dimension size = botao.getPreferredSize();
-        botao.setLayout(null);
+        frame.setLayout(null);
         
-        botao.setBounds((o.getSize().width)-(botao.getSize().width*2-20), (o.getSize().height/2)+150, size.width, size.height);
+        botao.setBounds((frame.getSize().width)-(botao.getSize().width*2-20), (frame.getSize().height/2)+150, size.width, size.height);
          
         Botao(botao);
     }
     
-     public void BotaoCancelar(JButton botao, JFrame o){
+     public void BotaoCancelar(JButton botao){
          
         Dimension size = botao.getPreferredSize();
         botao.setLayout(null);
                  
-        botao.setBounds((o.getSize().width/2)-(botao.getSize().width*3+31), (o.getSize().height/2)+150, size.width, size.height);
+        botao.setBounds((frame.getSize().width/2)-(botao.getSize().width*3+31), (frame.getSize().height/2)+150, size.width, size.height);
          
         Botao(botao);
     }
     
-    public void BotaoCentro(JButton botao, JFrame o){
+    public void BotaoCentro(JButton botao){
         Dimension size = botao.getPreferredSize();
-        botao.setLayout(null);
+        frame.setLayout(null);
         
-        botao.setBounds((o.getSize().width/2)-(botao.getSize().width/3), (o.getSize().height/2)+150, size.width, size.height);
+        botao.setBounds((frame.getSize().width/2)-(botao.getSize().width/3), (frame.getSize().height/2)+150, size.width, size.height);
          
         Botao(botao);
     }
@@ -90,7 +88,7 @@ public class Design {
     
     }
     
-    public void progressBar(JProgressBar pb, JFrame frame){
+    public void progressBar(JProgressBar pb){
         
         frame.setLayout(null);
         

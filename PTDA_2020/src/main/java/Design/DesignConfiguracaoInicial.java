@@ -16,9 +16,17 @@ import javax.swing.JTextField;
  * @author sofia
  */
 public class DesignConfiguracaoInicial extends Design{
+
+    JFrame frame;
+    
+    public DesignConfiguracaoInicial(JFrame frame) {
+        super(frame);
+        this.frame = frame;
+    }
     
     
-    public void label(JLabel textoNumMesas, JFrame frame){
+    
+    public void label(JLabel textoNumMesas){
     
         Dimension sizeNumMesas = textoNumMesas.getPreferredSize();
         frame.setLayout(null);
@@ -26,7 +34,7 @@ public class DesignConfiguracaoInicial extends Design{
         textoNumMesas.setBounds(((frame.getSize().width/2)-(textoNumMesas.getSize().width/2)), (frame.getSize().height/2)-125, sizeNumMesas.width, sizeNumMesas.height);
     }
     
-     public void spinner(JSpinner numMesas, JFrame frame){
+     public void spinner(JSpinner numMesas){
     
         Dimension sizeNumMesas = numMesas.getPreferredSize();
         frame.setLayout(null);
@@ -34,7 +42,7 @@ public class DesignConfiguracaoInicial extends Design{
         numMesas.setBounds(((frame.getSize().width/2)-(numMesas.getSize().width/2)), (frame.getSize().height/2)-90, 70, sizeNumMesas.height);
     }
     
-     public void textoErro(JLabel erro, JFrame frame){
+     public void textoErro(JLabel erro){
         
         super.textoErro(erro);
         

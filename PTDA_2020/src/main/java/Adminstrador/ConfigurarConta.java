@@ -15,25 +15,24 @@ import java.util.logging.Logger;
  */
 public class ConfigurarConta extends javax.swing.JFrame {
 
-    private DesignConfigurarConta design = new DesignConfigurarConta();
+    private DesignConfigurarConta design = new DesignConfigurarConta(this);
     private Identidade c = new Identidade();
     
     public ConfigurarConta() {
         initComponents();
         
-        
         erroPasse.setVisible(false);
         
         //design dos componentes
-        design.titulo(tituloConfigurarConta, this);
-        design.BotaoProximo(BotaoProximo, this);
-        design.BotaoCancelar(botaoCancelar,this);
+        design.titulo(tituloConfigurarConta);
+        design.BotaoProximo(BotaoProximo);
+        design.BotaoCancelar(botaoCancelar);
         
-        design.label(textoNomeUtilizador, textoNovaPasse, textoRepetirPasse, this);
-        design.textField(escreverNomeUtilizador, escreverNovaPasse, repetirPasse, this);
-        design.textoErro(erroPasse, this);
+        design.label(textoNomeUtilizador, textoNovaPasse, textoRepetirPasse);
+        design.textField(escreverNomeUtilizador, escreverNovaPasse, repetirPasse);
+        design.textoErro(erroPasse);
         
-        design.progressBar(progressBar, this);
+        design.progressBar(progressBar);
         
         //barra de progresso
         progressBar.setStringPainted(true);
@@ -182,7 +181,7 @@ public class ConfigurarConta extends javax.swing.JFrame {
                 i.mudarNomePasse(escreverNomeUtilizador.getText(), escreverNovaPasse.getText());
                 
                 ProgressBar m = new ProgressBar(progressBar);
-                MostarInterface mi = new MostarInterface(this, new ConfiguracaoInicial());
+                MostrarInterface mi = new MostrarInterface(this, new ConfiguracaoInicial());
                 m.start();
                 mi.start();
                 
