@@ -23,6 +23,8 @@ public class Ver_pedidos extends javax.swing.JFrame {
      */
     public Ver_pedidos() throws ClassNotFoundException, SQLException {
         initComponents();
+        
+        //adicionar as mesas à lista
         pedidosLista();
         PedidosLista.setSelectedIndex(0);
         String [] array = PedidosLista.getSelectedValue().split(" "); 

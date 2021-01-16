@@ -5,7 +5,6 @@
  */
 package Thread;
 
-import Adminstrador.*;
 import javax.swing.JProgressBar;
 /**
  *
@@ -17,7 +16,10 @@ public class ProgressBar extends Thread {
     
     public ProgressBar(JProgressBar nome) {
         this.nome = nome;
-        
+        nome.setVisible(true);
+        nome.setStringPainted(true);
+        nome.setValue(0);
+        nome.setString(0 + "%");
     }
   
   
@@ -29,6 +31,8 @@ public class ProgressBar extends Thread {
            nome.setValue(x);
            nome.setString(x + "%");
        }
+       
+       nome.setVisible(false);
   }
 }
 

@@ -26,9 +26,9 @@ public class DesignAdicionarCategoria extends Design{
         
         frame.setLayout(null);
         
-        adicionar.setBounds(272 ,40 , 110, 34);
+        adicionar.setBounds(272, 40, 110, 34);
         remover.setBounds(272, 153, 110, 34);
-        cancelar.setBounds(272,203 , 110, 34);
+        cancelar.setBounds(272, 203, 110, 34);
         
         super.Botao(cancelar);
     }
@@ -45,27 +45,13 @@ public class DesignAdicionarCategoria extends Design{
        
     }
     
-    public void lista(JList nome){
-        
-        Dimension size = nome.getPreferredSize();
-        frame.setLayout(null);
-         
-        
-        //centrar o titulo
-        nome.setBounds(0, 0, 110, size.height);
-        
-       
-    }
-    
      public void escrever(JTextField nome){
         
         Dimension size = nome.getPreferredSize();
         frame.setLayout(null);
         
-        //centrar o titulo
         nome.setBounds(272, 92, size.width, size.height);
         
-       
     }
      
     
@@ -75,7 +61,6 @@ public class DesignAdicionarCategoria extends Design{
         Dimension sizeErro = erro.getPreferredSize();
         frame.setLayout(null);
         
-        //centrar o titulo
         erro.setBounds(272, 132, 200, sizeErro.height);
         
         super.textoErro(erro);

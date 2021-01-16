@@ -29,7 +29,6 @@ public class Personalizacao extends javax.swing.JFrame {
         design.titulo(titulo);
         design.botao(adicionarPersonalizacao, removerPersonalizacao, cancelar);
         design.escrever(escreverPersonalizacao);
-        design.lista(listaPersonalizacao);
         design.textoErro(erro);
 
         erro.setVisible(false);
@@ -203,7 +202,7 @@ public class Personalizacao extends javax.swing.JFrame {
 
     private void removerPersonalizacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerPersonalizacaoActionPerformed
         try {
-            produto.removerDado("Personalizacao", listaPersonalizacao.getSelectedValue());
+            produto.removerDado("Personalizacao", listaPersonalizacao.getSelectedValue(), 0, "Nome");
             personalizacaoLista();
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(AdicionarCategoria.class.getName()).log(Level.SEVERE, null, ex);

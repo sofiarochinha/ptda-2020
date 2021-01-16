@@ -1,0 +1,66 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Design;
+
+import java.awt.Dimension;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+
+/**
+ *
+ * @author sofia
+ */
+public class DesignProdutosAdicionados extends Design{
+    
+    public DesignProdutosAdicionados(JFrame frame) {
+        super(frame);
+    }
+    
+    /**
+     * 
+     * @param categoria
+     * @param produtos 
+     */
+    public void jLabel(JLabel categoria, JLabel produtos){
+        Dimension sizeCategoria = categoria.getPreferredSize();
+        Dimension sizeProdutos = produtos.getPreferredSize();
+       
+        frame.setLayout(null);
+        
+        categoria.setBounds(132, (frame.getSize().height/2)-160, sizeCategoria.width, sizeCategoria.height);
+        produtos.setBounds((frame.getSize().width/2)-(produtos.getSize().width/2), (frame.getSize().height/2)-160, sizeProdutos.width, sizeProdutos.height);
+    }
+    
+     public void listas(JList list, JScrollPane scroll, JList listCategoria, JScrollPane scrollCategoria){
+      
+        frame.setLayout(null);
+        
+        list.setBounds(400, 150, 200, 200);
+        scroll.setBounds(400, 150,  200, 200);
+        
+        listCategoria.setBounds(110, 150, 200, 200);
+        scrollCategoria.setBounds(110, 150, 200, 200);
+     
+     }
+    
+     public void botoes(JButton adicionar, JButton remover, JButton anterior, JButton alterar){
+          frame.setLayout(null);
+          
+          adicionar.setBounds(700, 180, 110, 34);
+          alterar.setBounds(700, 250, 110, 34);
+          remover.setBounds(700, 320, 110, 34);
+          anterior.setBounds((frame.getSize().width/2)-(anterior.getSize().width*2+10), (frame.getSize().height/2)+150, 110, 34);
+          
+          super.Botao(anterior);
+     }
+     
+    
+    
+}

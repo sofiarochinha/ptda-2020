@@ -25,7 +25,6 @@ public class AdicionarCategoria extends javax.swing.JFrame {
         //design dos componentes
         design.titulo(titulo);
         design.botao(adicionarCategoria, removerCategoria, cancelar);
-        design.lista(listaCategorias);
         design.escrever(escreverCategoria);
         design.textoErro(erro);
 
@@ -194,7 +193,7 @@ public class AdicionarCategoria extends javax.swing.JFrame {
     private void removerCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerCategoriaActionPerformed
 
         try {
-            produto.removerDado("Categoria", listaCategorias.getSelectedValue());
+            produto.removerDado("Categoria", listaCategorias.getSelectedValue(), 0, "Nome");
             categoriasLista();
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(AdicionarCategoria.class.getName()).log(Level.SEVERE, null, ex);

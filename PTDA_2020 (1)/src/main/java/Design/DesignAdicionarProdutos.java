@@ -90,7 +90,7 @@ public class DesignAdicionarProdutos extends Design{
         Dimension sizeBotao = adicionarCategoria.getPreferredSize();
         frame.setLayout(null);
         
-        adicionarCategoria.setBounds(((frame.getSize().width/2)-(adicionarCategoria.getSize().width/2-250)), (frame.getSize().height/2+50), sizeBotao.width, sizeBotao.height);
+        adicionarCategoria.setBounds(272, (frame.getSize().height/2+50), 110, 34);
         
     }
     

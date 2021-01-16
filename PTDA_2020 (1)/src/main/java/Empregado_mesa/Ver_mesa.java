@@ -28,7 +28,7 @@ public class Ver_mesa extends javax.swing.JFrame {
         initComponents();
 
         design.titulo(titulo);
-        design.lista(listaMesa);
+//        design.lista(listaMesa);
         /*
         erro.setVisible(false);
         escreverPersonalizacao.setVisible(false);

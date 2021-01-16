@@ -392,23 +392,30 @@ public class AdicionarProduto extends javax.swing.JFrame {
         if (escreverNome.getText().equals("")) {
             erro.setVisible(true);
             erro.setText("Tem adicionar um nome.");
-        } else {
-            try {
-                produto.adicionarProduto(escreverNome.getText(), (Integer) spinnerTempo.getValue(),
-                        (String) comboboxIva.getSelectedItem(), escreverDescricao.getText(), (double) spinnerPreco.getValue(),
-                        (String) comboboxCategoria.getSelectedItem(), (String) comboboxPersonalizacao.getSelectedItem());
-            } catch (ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(AdicionarProduto.class.getName()).log(Level.SEVERE, null, ex);
+        } else try {
+            if(!produto.dadoProduto("Produto", escreverNome.getText())){
+                erro.setVisible(true);
+                erro.setText("Esse nome já existe");
+            }else{
+                try {
+                    produto.adicionarProduto(escreverNome.getText(), (Integer) spinnerTempo.getValue(),
+                            (String) comboboxIva.getSelectedItem(), escreverDescricao.getText(), (double) spinnerPreco.getValue(),
+                            (String) comboboxCategoria.getSelectedItem(), (String) comboboxPersonalizacao.getSelectedItem());
+                } catch (ClassNotFoundException | SQLException ex) {
+                    Logger.getLogger(AdicionarProduto.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                MostrarInterface mi;
+                try {
+                    mi = new MostrarInterface(this, new ProdutosAdicionados());
+                    mi.start();
+                } catch (ClassNotFoundException | SQLException ex) {
+                    Logger.getLogger(AdicionarProduto.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
             }
-
-            MostrarInterface mi;
-            try {
-                mi = new MostrarInterface(this, new ProdutosAdicionados());
-                mi.start();
-            } catch (ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(AdicionarProduto.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AdicionarProduto.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_BotaoProximoActionPerformed
 
@@ -524,7 +531,7 @@ public class AdicionarProduto extends javax.swing.JFrame {
     }
 
     public void comboxCategoria() throws ClassNotFoundException, SQLException {
-        Object o = comboboxPersonalizacao.getSelectedItem();
+        Object o = comboboxCategoria.getSelectedItem();
 
         comboboxCategoria.removeAllItems();
         String nome = produto.verDados("Categoria");
@@ -532,18 +539,14 @@ public class AdicionarProduto extends javax.swing.JFrame {
         for (String n : categorias) {
             comboboxCategoria.addItem(n);
         }
-
-        m1 = new JMenuItem("Categoria");
-
-        jPopupMenu1.add(m1);
-
-        comboboxPersonalizacao.setSelectedItem(o);
+        
+        comboboxCategoria.setSelectedItem(o);
 
     }
 
     public void comboxPersonalizacao() throws ClassNotFoundException, SQLException {
         Object o = comboboxPersonalizacao.getSelectedItem();
-
+        
         comboboxPersonalizacao.removeAllItems();
         String nome = produto.verDados("Personalizacao");
         String[] personalizacao = nome.split("\n");
@@ -551,14 +554,19 @@ public class AdicionarProduto extends javax.swing.JFrame {
             comboboxPersonalizacao.addItem(n);
         }
 
-        m2 = new JMenuItem("Personalização");
-        jPopupMenu1.add(m2);
-
         comboboxPersonalizacao.setSelectedItem(o);
     }
 
     public void setEscreverNome(String escreverNome) {
-        this.escreverNome.setText(escreverNome);
+            this.escreverNome.setText(escreverNome);
+        
+    }
+    
+    public void setDescricao(String descricao) {
+        if((!descricao.equals("null"))){
+            this.escreverDescricao.append(descricao);
+        }
+        
     }
 
     public void setSpinnerTempo(int tempo) {
@@ -566,19 +574,34 @@ public class AdicionarProduto extends javax.swing.JFrame {
     }
 
     public void setSpinnerPreco(double preco) {
+       
         spinnerPreco.setValue(preco);
     }
 
-    public void setComboboxCategoria(JComboBox<String> comboboxCategoria) {
-        this.comboboxCategoria = comboboxCategoria;
+    public void setComboboxCategoria(String categoria) {
+        int n = 0;
+        while(!comboboxCategoria.getItemAt(n).equals(categoria)) {
+            n++;
+            System.out.println(comboboxCategoria.getItemAt(n));
+            System.out.println(categoria);
+        }
+        comboboxCategoria.setSelectedIndex(n);
     }
 
-    public void setComboboxPersonalizacao(JComboBox<String> comboboxCategoria) {
-        this.comboboxCategoria = comboboxCategoria;
+    public void setComboboxPersonalizacao(String personalizacao) {
+        int n = 0;
+        while(!comboboxPersonalizacao.getItemAt(n).equals(personalizacao)) {
+            n++;
+        }
+        comboboxPersonalizacao.setSelectedIndex(n);
     }
 
-    public void setComboboxIva(JComboBox<String> comboboxCategoria) {
-        this.comboboxCategoria = comboboxCategoria;
+    public void setComboboxIva(Object iva) {
+        int n = 0;
+        while(!comboboxIva.getItemAt(n).equals(iva)){
+            n++;
+        }
+        comboboxIva.setSelectedIndex(n);
     }
 
     /**

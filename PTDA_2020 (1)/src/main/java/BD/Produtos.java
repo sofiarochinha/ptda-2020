@@ -1,12 +1,8 @@
 package BD;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -20,23 +16,34 @@ public class Produtos extends ConexaoBD {
      *
      * @param tabela
      * @param nome
+     * @param id
+     * @param atributo
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public void removerDado(String tabela, String nome) throws ClassNotFoundException, SQLException {
+    public void removerDado(String tabela, String nome, int id, String atributo) throws ClassNotFoundException, SQLException {
 
-        String query = "delete from " + tabela + " where Nome = ?";
+        PreparedStatement preparedStmtDelete = null;
 
-        PreparedStatement preparedStmtUpdate = super.conexao().prepareStatement(query);
-        preparedStmtUpdate.setString(1, nome);
+        if (nome == null) {
+            String query = "delete from " + tabela + " where " + atributo + " = ?";
 
-        preparedStmtUpdate.execute();
+            preparedStmtDelete = super.conexao().prepareStatement(query);
+            preparedStmtDelete.setInt(1, id);
+        } else {
+            String query = "delete from " + tabela + " where " + atributo + " like ?";
+
+            preparedStmtDelete = super.conexao().prepareStatement(query);
+            preparedStmtDelete.setString(1, nome);
+        }
+
+        preparedStmtDelete.execute();
 
         super.conexao().close();
     }
 
     /**
-     * Descriçao:
+     * Descriçao: devolve o nome do produto de uma tabela escolhida
      *
      * @param tabela
      * @param nome
@@ -180,7 +187,7 @@ public class Produtos extends ConexaoBD {
     }
 
     /**
-     * Descrição:
+     * Descrição: Devolve os produtos de cada Categoria
      *
      * @param id
      * @return produtos.toString()
@@ -208,10 +215,10 @@ public class Produtos extends ConexaoBD {
     }
 
     /**
-     * Descrição:
+     * Descrição: Retorna todos os dados de um determinado produto
      *
-     * @param nome
-     * @return
+     * @param nome -- do produto
+     * @return dados
      * @throws ClassNotFoundException
      * @throws SQLException
      */
@@ -220,23 +227,63 @@ public class Produtos extends ConexaoBD {
 
         String query = "select * from Produto where Nome like ?";
 
-        PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
+        PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
         preparedStmtSelect.setString(1, nome);
 
         preparedStmtSelect.execute();
 
         ResultSet rs = preparedStmtSelect.getResultSet();
 
-        
         while (rs.next()) {
 
             produto.append(rs.getString("ID_Categoria")).append("\n").append(rs.getString("Preco")).append("\n").append(rs.getString("Descricao")).append("\n");
-         
+
             produto.append(rs.getString("ID_Iva")).append("\n").append(rs.getString("ID_Personalizacao")).append("\n").append(rs.getString("Tempo")).append("\n");
+
+            produto.append(rs.getString("Nome"));
         }
-        
+
         super.conexao().close();
         return produto.toString();
+
     }
+
+    /**
+     * Descricao: ve o nome associado ao id de personalizacao ou categoria ou
+     * iva
+     *
+     * @param id
+     * @param tabela
+     * @return nome do produto
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
+    public String dadosID(int id, String tabela) throws ClassNotFoundException, SQLException {
+        String nome = null;
+
+        String query = "select * from " + tabela + " where ID = ?";
+
+        PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
+        preparedStmtSelect.setInt(1, id);
+
+        preparedStmtSelect.execute();
+
+        ResultSet rs = preparedStmtSelect.getResultSet();
+
+        if (tabela.equals("Iva")) {
+            while (rs.next()) {
+                nome = rs.getString("Custo");
+
+            }
+        } else {
+            while (rs.next()) {
+                nome = rs.getString("Nome");
+            }
+        }
     
+
+    super.conexao().close();
+    return nome ;
+}
+
 }

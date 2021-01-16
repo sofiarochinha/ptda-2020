@@ -6,16 +6,13 @@
 package Adminstrador;
 
 import BD.Produtos;
-import Design.Design;
+import Design.DesignProdutosAdicionados;
 import Thread.MostrarInterface;
-import java.awt.Component;
+import Thread.ProgressBar;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import javax.swing.JPanel;
 
 /**
  *
@@ -23,57 +20,57 @@ import javax.swing.JPanel;
  */
 public class ProdutosAdicionados extends javax.swing.JFrame {
 
-    Design design = new Design(this);
+    DesignProdutosAdicionados design = new DesignProdutosAdicionados(this);
     Produtos produto = new Produtos();
 
     public ProdutosAdicionados() throws ClassNotFoundException, SQLException {
         initComponents();
 
         design.titulo(titulo);
-        tabMenu();
+        design.jLabel(categoriasText, produtosText);
+        design.BotaoProximo(botaoProximo);
+        design.BotaoCancelar(botaoCancelar);
+        design.progressBar(progressBar);
+        design.botoes(botaoAdicionar, botaoRemover, botaoAnterior, botaoAlterar);
+        design.listas(listaProdutos, jScrollPane4, listaCategoria, jScrollPane3);
+        listaCategorias();
+
+        //selecionar um item por default
+        listaCategoria.setSelectedIndex(0);
+
+        int id = produto.verID("Categoria", listaCategoria.getSelectedValue());
+        String[] produtos = produto.nomeProdutosCategoria(id).split("\n");
+
+        listaProdutos(produtos);
+
+        progressBar.setVisible(true);
+        listaProdutos.setSelectedIndex(0);
     }
 
-    public void tabMenu() throws ClassNotFoundException, SQLException {
+    public void listaCategorias() throws ClassNotFoundException, SQLException {
+        DefaultListModel dlm = new DefaultListModel();
 
-        tabMenu.setBounds(100, 100, 900, 550);
         String[] categorias = produto.verDados("Categoria").split("\n");
-        int i = 0;
 
-        ArrayList array = new ArrayList<JPanel>();
-        ArrayList listas = new ArrayList<JList>();
+        for (String n : categorias) {
+            dlm.addElement(n);
+        }
 
-        array.add(p1);
-        array.add(p2);
-        array.add(p3);
-        array.add(p4);
+        listaCategoria.setModel(dlm);
+    }
 
-        listas.add(listaTab1);
-        listas.add(listaTab2);
+    public void listaProdutos(String[] arrayProdutos) throws ClassNotFoundException, SQLException {
+        DefaultListModel dlm = new DefaultListModel();
 
-        for (String nome : categorias) {
-
-            tabMenu.add(nome, (JPanel) array.get(i));
-            DefaultListModel dlm = new DefaultListModel();
-
-            String[] produtos = produto.nomeProdutosCategoria(produto.verID("Categoria", nome)).split("\n");
-
-            for (String n : produtos) {
-
-                if (n.isEmpty()) {
-                    dlm.addElement("Não tem nenhum produto associado.");
-                } else {
-                    dlm.addElement(n);
-                }
+        for (String n : arrayProdutos) {
+            if (n.equals("")) {
+                dlm.addElement("Nao tem nenhum produto associado.");
+            } else {
+                dlm.addElement(n);
             }
-
-            ((JList) listas.get(i)).setModel(dlm);
-            i++;
         }
 
-        for (int n = i; n < array.size(); n++) {
-
-            tabMenu.remove((Component) array.get(n));
-        }
+        listaProdutos.setModel(dlm);
 
     }
 
@@ -88,244 +85,291 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
 
         jMenu1 = new javax.swing.JMenu();
         titulo = new javax.swing.JLabel();
-        tabMenu = new javax.swing.JTabbedPane();
-        p1 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        listaTab1 = new javax.swing.JList<>();
-        adicionarProduto1 = new javax.swing.JButton();
-        alterarProduto1 = new javax.swing.JButton();
-        removerProduto1 = new javax.swing.JButton();
-        p2 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        listaTab2 = new javax.swing.JList<>();
-        jButton1 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        p3 = new javax.swing.JPanel();
-        p4 = new javax.swing.JPanel();
         erro = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        listaCategoria = new javax.swing.JList<>();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        listaProdutos = new javax.swing.JList<>();
+        categoriasText = new javax.swing.JLabel();
+        produtosText = new javax.swing.JLabel();
+        botaoProximo = new javax.swing.JButton();
+        botaoAnterior = new javax.swing.JButton();
+        botaoAdicionar = new javax.swing.JButton();
+        botaoCancelar = new javax.swing.JButton();
+        botaoRemover = new javax.swing.JButton();
+        progressBar = new javax.swing.JProgressBar();
+        botaoAlterar = new javax.swing.JButton();
 
         jMenu1.setText("jMenu1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(900, 550));
 
         titulo.setFont(new java.awt.Font("Ubuntu", 0, 36)); // NOI18N
         titulo.setText("Os seus produtos");
 
-        tabMenu.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
-
-        p1.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-
-        listaTab1.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
-        listaTab1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(listaTab1);
-
-        adicionarProduto1.setText("Adicionar");
-        adicionarProduto1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                adicionarProduto1ActionPerformed(evt);
-            }
-        });
-
-        alterarProduto1.setText("Alterar");
-        alterarProduto1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                alterarProduto1ActionPerformed(evt);
-            }
-        });
-
-        removerProduto1.setText("Remover");
-
-        javax.swing.GroupLayout p1Layout = new javax.swing.GroupLayout(p1);
-        p1.setLayout(p1Layout);
-        p1Layout.setHorizontalGroup(
-            p1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(p1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(79, 79, 79)
-                .addGroup(p1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(adicionarProduto1)
-                    .addGroup(p1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(alterarProduto1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(removerProduto1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(151, Short.MAX_VALUE))
-        );
-        p1Layout.setVerticalGroup(
-            p1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(p1Layout.createSequentialGroup()
-                .addGroup(p1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(p1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(p1Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(adicionarProduto1)
-                        .addGap(18, 18, 18)
-                        .addComponent(alterarProduto1)
-                        .addGap(18, 18, 18)
-                        .addComponent(removerProduto1)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        tabMenu.addTab("tab1", p1);
-
-        listaTab2.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
-        listaTab2.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(listaTab2);
-
-        jButton1.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
-        jButton1.setText("Adicionar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton5.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
-        jButton5.setText("Alterar");
-
-        jButton6.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
-        jButton6.setText("Remover");
-
-        javax.swing.GroupLayout p2Layout = new javax.swing.GroupLayout(p2);
-        p2.setLayout(p2Layout);
-        p2Layout.setHorizontalGroup(
-            p2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(p2Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(87, 87, 87)
-                .addGroup(p2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addGroup(p2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jButton5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap(133, Short.MAX_VALUE))
-        );
-        p2Layout.setVerticalGroup(
-            p2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(p2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(p2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(p2Layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(26, 26, 26)
-                        .addComponent(jButton5)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButton6))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        tabMenu.addTab("tab2", p2);
-
-        javax.swing.GroupLayout p3Layout = new javax.swing.GroupLayout(p3);
-        p3.setLayout(p3Layout);
-        p3Layout.setHorizontalGroup(
-            p3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 512, Short.MAX_VALUE)
-        );
-        p3Layout.setVerticalGroup(
-            p3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 177, Short.MAX_VALUE)
-        );
-
-        tabMenu.addTab("tab3", p3);
-
-        javax.swing.GroupLayout p4Layout = new javax.swing.GroupLayout(p4);
-        p4.setLayout(p4Layout);
-        p4Layout.setHorizontalGroup(
-            p4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 512, Short.MAX_VALUE)
-        );
-        p4Layout.setVerticalGroup(
-            p4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 177, Short.MAX_VALUE)
-        );
-
-        tabMenu.addTab("tab4", p4);
-
         erro.setText("jLabel1");
+
+        listaCategoria.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        listaCategoria.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        listaCategoria.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listaCategoriaMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(listaCategoria);
+
+        listaProdutos.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        listaProdutos.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane4.setViewportView(listaProdutos);
+        listaProdutos.getAccessibleContext().setAccessibleDescription("");
+
+        categoriasText.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        categoriasText.setText("Categorias");
+
+        produtosText.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        produtosText.setText("Produtos");
+
+        botaoProximo.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoProximo.setText("Próximo");
+        botaoProximo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoProximoActionPerformed(evt);
+            }
+        });
+
+        botaoAnterior.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoAnterior.setText("Anterior");
+        botaoAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAnteriorActionPerformed(evt);
+            }
+        });
+
+        botaoAdicionar.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoAdicionar.setText("Adicionar");
+        botaoAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAdicionarActionPerformed(evt);
+            }
+        });
+
+        botaoCancelar.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoCancelar.setText("Cancelar");
+        botaoCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoCancelarActionPerformed(evt);
+            }
+        });
+
+        botaoRemover.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoRemover.setText("Remover");
+        botaoRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoRemoverActionPerformed(evt);
+            }
+        });
+
+        botaoAlterar.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoAlterar.setText("Alterar");
+        botaoAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAlterarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(144, 144, 144)
+                .addComponent(titulo)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(erro, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(334, 334, 334))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(77, 77, 77)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(144, 144, 144)
-                        .addComponent(titulo))
+                        .addComponent(categoriasText)
+                        .addGap(134, 134, 134)
+                        .addComponent(produtosText)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(tabMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 532, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(79, 79, 79)
-                        .addComponent(erro, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(65, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addComponent(botaoCancelar)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(botaoAnterior))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(51, 51, 51)
+                                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(botaoProximo)
+                                    .addComponent(botaoAdicionar)
+                                    .addComponent(botaoRemover))
+                                .addGap(50, 50, 50))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(botaoAlterar)
+                                .addGap(59, 59, 59))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(titulo)
-                .addGap(31, 31, 31)
-                .addComponent(tabMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(categoriasText)
+                    .addComponent(produtosText))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(erro)
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(botaoAdicionar)
+                        .addGap(28, 28, 28)
+                        .addComponent(botaoAlterar)
+                        .addGap(50, 50, 50)
+                        .addComponent(botaoRemover)))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(erro)
+                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(botaoProximo)
+                    .addComponent(botaoAnterior)
+                    .addComponent(botaoCancelar))
+                .addGap(28, 28, 28))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void alterarProduto1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarProduto1ActionPerformed
-        MostrarInterface mi;
+    private void listaCategoriaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaCategoriaMouseClicked
         try {
+            ProgressBar pb = new ProgressBar(progressBar);
+            pb.start();
+            int id = produto.verID("Categoria", listaCategoria.getSelectedValue());
+            String[] produtos = produto.nomeProdutosCategoria(id).split("\n");
 
-            if (listaTab1.getSelectedValue() == null) {
-                erro.setText("Tem de selecionar um produto");
-            } else {
-                AdicionarProduto adicionar = new AdicionarProduto();
-
-                mi = new MostrarInterface(this, adicionar);
-                mi.start();
-                adicionar.setEscreverNome(listaTab1.getSelectedValue());
-
-                String[] dadosProduto = produto.dadosCadaProduto(listaTab1.getSelectedValue()).split("\n");
-
-                adicionar.setSpinnerPreco(Double.parseDouble(dadosProduto[1]));
-                adicionar.setSpinnerTempo(Integer.parseInt(dadosProduto[5]));
-
-            }
-
+            listaProdutos(produtos);
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ProdutosAdicionados.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }//GEN-LAST:event_listaCategoriaMouseClicked
 
-    }//GEN-LAST:event_alterarProduto1ActionPerformed
-
-    private void adicionarProduto1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarProduto1ActionPerformed
+    private void botaoAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdicionarActionPerformed
+        MostrarInterface mi;
         try {
-            MostrarInterface mi = new MostrarInterface(this, new AdicionarProduto());
+            mi = new MostrarInterface(this, new AdicionarProduto());
             mi.start();
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ProdutosAdicionados.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_adicionarProduto1ActionPerformed
+
+    }//GEN-LAST:event_botaoAdicionarActionPerformed
+
+    private void botaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoProximoActionPerformed
+        MostrarInterface mi;
+        mi = new MostrarInterface(this, new CadastrarEquipa());
+        mi.start();
+        ProgressBar pb = new ProgressBar(progressBar);
+        pb.start();
+    }//GEN-LAST:event_botaoProximoActionPerformed
+
+    private void botaoRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoRemoverActionPerformed
+
+        try {
+            ProgressBar pb = new ProgressBar(progressBar);
+            pb.start();
+
+            //remove o produto do menu e da base de dados
+            int idProduto = produto.verID("Produto", listaProdutos.getSelectedValue());
+
+            produto.removerDado("Menu_Produto", null, idProduto, "ID_Produto");
+            produto.removerDado("Produto", null, idProduto, "ID");
+
+            //atualiza a lista
+            int idCategoria = produto.verID("Categoria", listaCategoria.getSelectedValue());
+            String[] produtos = produto.nomeProdutosCategoria(idCategoria).split("\n");
+
+            listaProdutos(produtos);
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ProdutosAdicionados.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+    }//GEN-LAST:event_botaoRemoverActionPerformed
+
+    private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
+        MostrarInterface mi;
+
+        try {
+            ProgressBar pb = new ProgressBar(progressBar);
+            pb.start();
+
+            String[] dados = produto.dadosCadaProduto(listaProdutos.getSelectedValue()).split("\n");
+            String categoria = produto.dadosID(Integer.parseInt(dados[0]), "Categoria");//retorna a categoria associada
+            double preco = Double.parseDouble(dados[1]); //preco do produto
+            String descricao = dados[2];
+            String iva = produto.dadosID(Integer.parseInt(dados[3]), "Iva").trim();
+            String personalizacao = produto.dadosID(Integer.parseInt(dados[4]), "Personalizacao").trim();
+            int tempo = Integer.parseInt(dados[5]);
+            String nome = dados[6];
+
+            AdicionarProduto ap = new AdicionarProduto();
+            ap.setComboboxCategoria(categoria);
+            ap.setSpinnerPreco(preco);
+            ap.setDescricao(descricao);
+            ap.setComboboxIva(iva + "%");
+            ap.setComboboxPersonalizacao(personalizacao);
+            ap.setSpinnerTempo(tempo);
+            ap.setEscreverNome(nome);
+
+            mi = new MostrarInterface(this, ap);
+            mi.start();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ProdutosAdicionados.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_botaoAlterarActionPerformed
+
+    private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
+
+    }//GEN-LAST:event_botaoCancelarActionPerformed
+
+    private void botaoAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAnteriorActionPerformed
+        MostrarInterface mi;
+        try {
+            mi = new MostrarInterface(this, new AdicionarProduto());
+            mi.start();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ProdutosAdicionados.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        ProgressBar pb = new ProgressBar(progressBar);
+        pb.start();
+
+    }//GEN-LAST:event_botaoAnteriorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -365,23 +409,21 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton adicionarProduto1;
-    private javax.swing.JButton alterarProduto1;
+    private javax.swing.JButton botaoAdicionar;
+    private javax.swing.JButton botaoAlterar;
+    private javax.swing.JButton botaoAnterior;
+    private javax.swing.JButton botaoCancelar;
+    private javax.swing.JButton botaoProximo;
+    private javax.swing.JButton botaoRemover;
+    private javax.swing.JLabel categoriasText;
     private javax.swing.JLabel erro;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JList<String> listaTab1;
-    private javax.swing.JList<String> listaTab2;
-    private javax.swing.JPanel p1;
-    private javax.swing.JPanel p2;
-    private javax.swing.JPanel p3;
-    private javax.swing.JPanel p4;
-    private javax.swing.JButton removerProduto1;
-    private javax.swing.JTabbedPane tabMenu;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JList<String> listaCategoria;
+    private javax.swing.JList<String> listaProdutos;
+    private javax.swing.JLabel produtosText;
+    private javax.swing.JProgressBar progressBar;
     private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
 }
