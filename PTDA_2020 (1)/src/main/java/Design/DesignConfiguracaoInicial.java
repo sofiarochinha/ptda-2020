@@ -9,7 +9,6 @@ import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
 
 /**
  *
@@ -17,7 +16,7 @@ import javax.swing.JTextField;
  */
 public class DesignConfiguracaoInicial extends Design{
 
-    JFrame frame;
+    private JFrame frame;
     
     public DesignConfiguracaoInicial(JFrame frame) {
         super(frame);

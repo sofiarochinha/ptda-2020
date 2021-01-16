@@ -21,7 +21,7 @@ import javax.swing.JTextField;
  */
 public class DesignAdicionarProdutos extends Design{
 
-    JFrame frame;
+    private JFrame frame;
     //AdicionarProduto produto = new AdicionarProduto();
     
     public DesignAdicionarProdutos(JFrame frame) throws ClassNotFoundException, SQLException {

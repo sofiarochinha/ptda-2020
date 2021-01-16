@@ -18,7 +18,7 @@ import javax.swing.JProgressBar;
  */
 public class Design {
     
-    JFrame frame;
+    private JFrame frame;
     
     public Design(JFrame frame){
         this.frame = frame;
@@ -43,7 +43,6 @@ public class Design {
               
         //centrar o titulo
         nome.setBounds((frame.getSize().width/2)-(nome.getSize().width/2), (frame.getSize().height/2)-250, size.width, size.height);
-        nome.setFont(new Font("SansSerif", Font.PLAIN, 36));
        
     }
     
@@ -68,6 +67,12 @@ public class Design {
         Botao(botao);
     }
     
+     public void BotaoAnterior(JButton anterior){
+         
+         frame.setLayout(null);
+         anterior.setBounds((frame.getSize().width/2)-(anterior.getSize().width*2+10), (frame.getSize().height/2)+150, 110, 34);
+         
+     }
     public void BotaoCentro(JButton botao){
         Dimension size = botao.getPreferredSize();
         frame.setLayout(null);
@@ -99,7 +104,9 @@ public class Design {
         
     }
 
-    
+    public JFrame getJFrame(){
+        return frame;
+    }
     
     
 }

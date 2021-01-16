@@ -17,7 +17,7 @@ import javax.swing.JTextField;
  */
 public class DesignConfigurarConta extends Design{
 
-    JFrame frame;
+    private JFrame frame;
     
     public DesignConfigurarConta(JFrame frame) {
         super(frame);

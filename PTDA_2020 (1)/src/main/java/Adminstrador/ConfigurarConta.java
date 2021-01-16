@@ -3,7 +3,6 @@ package Adminstrador;
 import Thread.*;
 import BD.Identidade;
 import Design.*;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +15,7 @@ import java.util.logging.Logger;
 public class ConfigurarConta extends javax.swing.JFrame {
 
     private DesignConfigurarConta design = new DesignConfigurarConta(this);
-    private Identidade c = new Identidade();
+    private Identidade identidade = new Identidade();
 
     public ConfigurarConta() {
         initComponents();
@@ -185,7 +184,7 @@ public class ConfigurarConta extends javax.swing.JFrame {
                 erroPasse.setVisible(true);
                 erroPasse.setText("Tem de repetir a palavra-passe");
             } else {
-                if (escreverNovaPasse.getText().equals(repetirPasse.getText()) && c.verNomeUtilizadorRepetido(escreverNomeUtilizador.getText())) {
+                if (escreverNovaPasse.getText().equals(repetirPasse.getText()) && identidade.verNomeUtilizadorRepetido(escreverNomeUtilizador.getText(), "'Admin'")) {
                     erroPasse.setVisible(false);
                     Identidade i = new Identidade();
                     i.mudarNomePasse(escreverNomeUtilizador.getText(), escreverNovaPasse.getText());
@@ -195,7 +194,7 @@ public class ConfigurarConta extends javax.swing.JFrame {
                     m.start();
                     mi.start();
 
-                } else if (!c.verNomeUtilizadorRepetido(escreverNomeUtilizador.getText())) {
+                } else if (!identidade.verNomeUtilizadorRepetido(escreverNomeUtilizador.getText(), "'Admin'")) {
                     erroPasse.setVisible(true);
                     erroPasse.setText("Esse nome já existe.");
                 } else if (!escreverNovaPasse.getText().equals(repetirPasse.getText())) {

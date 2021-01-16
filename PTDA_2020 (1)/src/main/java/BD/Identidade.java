@@ -1,20 +1,18 @@
 package BD;
 
-//comandos SQL
-//select * from Categoria" -> selecionar tudo da tabela categoria
-//ResultSet rs = preparedStmtSelect.getResultSet();
-//insert into Categoria (ID, Nome)" + " values (?, ?)
-//delete from Categoria where ** = ?";
-//UPDATE facil SET marca = 0
-//api
-//  GET, POST, PUT, DELETE
-// /produtos = URL para ações sobre recursos do tipo Produto
-// /produtos/1 = URL para ações sobre um produto específico
 import java.sql.*;
 
 public class Identidade extends ConexaoBD{
 
-    
+    /**
+     * Descricao: 
+     * @param tipoFuncionario
+     * @param nome
+     * @param pass
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     public boolean verPassword(String tipoFuncionario, String nome, String pass) throws ClassNotFoundException, SQLException {
 
 
@@ -35,10 +33,16 @@ public class Identidade extends ConexaoBD{
 
         return false;
     }
+    /**
+     * 
+     * @param nomeUtilizador
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
+    public boolean verNomeUtilizadorRepetido(String nomeUtilizador, String Funcao) throws ClassNotFoundException, SQLException {
 
-    public boolean verNomeUtilizadorRepetido(String nomeUtilizador) throws ClassNotFoundException, SQLException {
-
-        String query = "select * from Funcionario where Funcao like 'Admin'";
+        String query = "select * from Funcionario where Funcao like " + Funcao;
 
         PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
         preparedStmtSelect.execute();
@@ -76,5 +80,28 @@ public class Identidade extends ConexaoBD{
         super.conexao().close();
     }
 
+     public void novoFuncionario(String nome, String nomeUtilizador, String palavraPasse, String Funcao) throws ClassNotFoundException, SQLException {
+
+        String query = " insert into Funcionario (Nome, Nome_Utilizador, Palavra_Passe, Funcao) " + " value (?,?,?,?)";
+
+        switch (Funcao){
+            case "'Admin'":
+                Funcao = "Admin";break;
+            case "'Mesa'":
+                Funcao = "Mesa"; break;
+            case "'Cozinha'":
+                Funcao = "Cozinha"; break;
+            
+        }
+        PreparedStatement preparedStmtUpdate = super.conexao().prepareStatement(query);
+        preparedStmtUpdate.setString(1, nome);
+        preparedStmtUpdate.setString(2, nomeUtilizador);
+        preparedStmtUpdate.setString(3, palavraPasse);
+        preparedStmtUpdate.setString(4, Funcao);
+        
+        preparedStmtUpdate.execute();
+      
+        super.conexao().close();
+    }
     
 }

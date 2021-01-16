@@ -32,15 +32,15 @@ public class DesignProdutosAdicionados extends Design{
         Dimension sizeCategoria = categoria.getPreferredSize();
         Dimension sizeProdutos = produtos.getPreferredSize();
        
-        frame.setLayout(null);
+        getJFrame().setLayout(null);
         
-        categoria.setBounds(132, (frame.getSize().height/2)-160, sizeCategoria.width, sizeCategoria.height);
-        produtos.setBounds((frame.getSize().width/2)-(produtos.getSize().width/2), (frame.getSize().height/2)-160, sizeProdutos.width, sizeProdutos.height);
+        categoria.setBounds(132, (getJFrame().getSize().height/2)-160, sizeCategoria.width, sizeCategoria.height);
+        produtos.setBounds((getJFrame().getSize().width/2)-(produtos.getSize().width/2), (getJFrame().getSize().height/2)-160, sizeProdutos.width, sizeProdutos.height);
     }
     
      public void listas(JList list, JScrollPane scroll, JList listCategoria, JScrollPane scrollCategoria){
       
-        frame.setLayout(null);
+        getJFrame().setLayout(null);
         
         list.setBounds(400, 150, 200, 200);
         scroll.setBounds(400, 150,  200, 200);
@@ -51,12 +51,12 @@ public class DesignProdutosAdicionados extends Design{
      }
     
      public void botoes(JButton adicionar, JButton remover, JButton anterior, JButton alterar){
-          frame.setLayout(null);
+          getJFrame().setLayout(null);
           
           adicionar.setBounds(700, 180, 110, 34);
           alterar.setBounds(700, 250, 110, 34);
           remover.setBounds(700, 320, 110, 34);
-          anterior.setBounds((frame.getSize().width/2)-(anterior.getSize().width*2+10), (frame.getSize().height/2)+150, 110, 34);
+          anterior.setBounds((getJFrame().getSize().width/2)-(anterior.getSize().width*2+10), (getJFrame().getSize().height/2)+150, 110, 34);
           
           super.Botao(anterior);
      }
