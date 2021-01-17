@@ -5,17 +5,79 @@
  */
 package Adminstrador;
 
+import BD.*;
+import Design.*;
+import Thread.*;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+
 /**
  *
  * @author sofia
  */
 public class Equipa extends javax.swing.JFrame {
 
+    private Identidade identidade = new Identidade();
+    private int selecionado = 0;
+    private Design design = new Design(this);
+    private String funcao = null;
+    private VerDados dados = new VerDados();
+
     /**
      * Creates new form Equipa
      */
-    public Equipa() {
+    public Equipa() throws ClassNotFoundException, SQLException {
         initComponents();
+
+        listas();
+        design.titulo(titulo);
+        design.progressBar(progressBar);
+
+    }
+
+    /**
+     * Descricao: coloca na lista da tab "Adminstrador" todos os nomes que tem
+     * associado a funcao "Admin"
+     *
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
+    public void listas() throws ClassNotFoundException, SQLException {
+
+        DefaultListModel dlm = new DefaultListModel();
+
+        switch (selecionado) {
+            case 0:
+                funcao = "Admin";
+                break;
+            case 1:
+                funcao = "Mesa";
+                break;
+            case 2:
+                funcao = "Cozinha";
+                break;
+        }
+
+        String[] funcionarios = identidade.verFuncionario(funcao).split("\n");
+
+        for (String n : funcionarios) {
+            dlm.addElement(n);
+        }
+
+        switch (selecionado) {
+            case 0:
+                listaAdmin.setModel(dlm);
+                break;
+            case 1:
+                listaMesa.setModel(dlm);
+                break;
+            case 2:
+                listaCozinha.setModel(dlm);
+                break;
+        }
+
     }
 
     /**
@@ -27,24 +89,26 @@ public class Equipa extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel2 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        titulo = new javax.swing.JLabel();
         BotaoProximo = new javax.swing.JButton();
         botaoCancelar = new javax.swing.JButton();
         BotaoProximo1 = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listaAdmin = new javax.swing.JList<>();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        listaMesa = new javax.swing.JList<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        listaCozinha = new javax.swing.JList<>();
+        progressBar = new javax.swing.JProgressBar();
+        botaoAdicionar = new javax.swing.JButton();
+        botaoAlterar = new javax.swing.JButton();
+        botaoRemover = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(900, 550));
 
-        jLabel2.setFont(new java.awt.Font("SansSerif", 0, 36)); // NOI18N
-        jLabel2.setText("A sua equipa");
-
-        jLabel5.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        jLabel5.setText("Empregado 1");
-
-        jButton1.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        jButton1.setText("+");
+        titulo.setFont(new java.awt.Font("SansSerif", 0, 36)); // NOI18N
+        titulo.setText("A sua equipa");
 
         BotaoProximo.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         BotaoProximo.setText("Próximo");
@@ -57,41 +121,95 @@ public class Equipa extends javax.swing.JFrame {
         BotaoProximo1.setText("Anterior");
         BotaoProximo1.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
+        jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTabbedPane1MouseClicked(evt);
+            }
+        });
+
+        jScrollPane1.setViewportView(listaAdmin);
+
+        jTabbedPane1.addTab("Administrador ", jScrollPane1);
+
+        jScrollPane2.setViewportView(listaMesa);
+
+        jTabbedPane1.addTab("Empregado de Mesa", jScrollPane2);
+
+        jScrollPane3.setViewportView(listaCozinha);
+
+        jTabbedPane1.addTab("Empregado de Cozinha", jScrollPane3);
+
+        botaoAdicionar.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoAdicionar.setText("Adicionar");
+        botaoAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAdicionarActionPerformed(evt);
+            }
+        });
+
+        botaoAlterar.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoAlterar.setText("Alterar");
+        botaoAlterar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoAlterarActionPerformed(evt);
+            }
+        });
+
+        botaoRemover.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoRemover.setText("Remover");
+        botaoRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoRemoverActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(189, 189, 189)
-                        .addComponent(jLabel2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(jLabel5))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(32, 32, 32)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(botaoCancelar)
-                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(BotaoProximo1)))
-                .addContainerGap(194, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(BotaoProximo)
                 .addGap(29, 29, 29))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(189, 189, 189)
+                        .addComponent(titulo))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(32, 32, 32)
+                        .addComponent(botaoCancelar)
+                        .addGap(18, 18, 18)
+                        .addComponent(BotaoProximo1)
+                        .addGap(84, 84, 84)
+                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(61, 61, 61)
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 576, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(67, 67, 67)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(botaoAdicionar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(botaoRemover, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(botaoAlterar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(104, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(29, 29, 29)
-                .addComponent(jLabel2)
-                .addGap(61, 61, 61)
-                .addComponent(jLabel5)
-                .addGap(18, 18, 18)
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 161, Short.MAX_VALUE)
+                .addComponent(titulo)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(86, 86, 86)
+                        .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(123, 123, 123)
+                        .addComponent(botaoAdicionar)
+                        .addGap(27, 27, 27)
+                        .addComponent(botaoAlterar)
+                        .addGap(28, 28, 28)
+                        .addComponent(botaoRemover)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(BotaoProximo)
@@ -100,11 +218,106 @@ public class Equipa extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(botaoCancelar)
                             .addComponent(BotaoProximo1))
-                        .addGap(39, 39, 39))))
+                        .addGap(39, 39, 39))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
+        selecionado = jTabbedPane1.getSelectedIndex();
+        try {
+
+            listas();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(Equipa.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jTabbedPane1MouseClicked
+
+    /**
+     * Descricao: Adiciona um novo produto
+     *
+     * @param evt
+     */
+    private void botaoAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdicionarActionPerformed
+        MostrarInterface mi;
+        mi = new MostrarInterface(this, new CadastrarEquipa());
+        mi.start();
+        ProgressBar pb = new ProgressBar(progressBar);
+        pb.start();
+    }//GEN-LAST:event_botaoAdicionarActionPerformed
+
+    private void botaoRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoRemoverActionPerformed
+
+        try {
+            switch (selecionado) {
+                case 0:
+                    identidade.removerFuncionario(listaAdmin.getSelectedValue(), funcao);
+                    break;
+                case 1:
+                    identidade.removerFuncionario(listaMesa.getSelectedValue(), funcao);
+                    break;
+                case 2:
+                    identidade.removerFuncionario(listaCozinha.getSelectedValue(), funcao);
+                    break;
+            }
+            listas();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(Equipa.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+    }//GEN-LAST:event_botaoRemoverActionPerformed
+
+    /**
+     * Descricao: apresenta uma nova interface com os dados que quer alterar e
+     * modifica na base de dados
+     *
+     * @param evt
+     */
+    private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
+        String nome = null;
+        CadastrarEquipa equipa = new CadastrarEquipa();
+
+        switch (selecionado) {
+            case 0:
+                funcao = "Administrador";
+                nome = listaAdmin.getSelectedValue();
+                break;
+            case 1:
+                funcao = "Empregado de cozinha";
+                nome = listaMesa.getSelectedValue();
+                break;
+            case 2:
+                funcao = "Empregado de mesa";
+                nome = listaCozinha.getSelectedValue();
+                break;
+        }
+        try {
+            String dados[] = identidade.dadosCadaFuncionario(nome).split("\n");
+            equipa.setComboboxTipoFuncionario(funcao);
+            equipa.setNomeFuncionario(dados[2]); // insere o nome do funcionario
+            equipa.setUsernameFuncionario(dados[0]); //insere o nome de utilizador
+            equipa.setPassword(dados[1]); // insere a password
+            equipa.setRepetirPassword(dados[1]);
+            equipa.setUpdate(true);
+            equipa.setID(this.dados.verID("Funcionario", nome));
+            
+            MostrarInterface mi;
+            mi = new MostrarInterface(this, equipa);
+            mi.start();
+            ProgressBar pb = new ProgressBar(progressBar);
+            pb.start();
+            
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(Equipa.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+    }//GEN-LAST:event_botaoAlterarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -134,9 +347,11 @@ public class Equipa extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
                 new Equipa().setVisible(true);
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(Equipa.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
@@ -144,9 +359,18 @@ public class Equipa extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotaoProximo;
     private javax.swing.JButton BotaoProximo1;
+    private javax.swing.JButton botaoAdicionar;
+    private javax.swing.JButton botaoAlterar;
     private javax.swing.JButton botaoCancelar;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel5;
+    private javax.swing.JButton botaoRemover;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JList<String> listaAdmin;
+    private javax.swing.JList<String> listaCozinha;
+    private javax.swing.JList<String> listaMesa;
+    private javax.swing.JProgressBar progressBar;
+    private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
 }

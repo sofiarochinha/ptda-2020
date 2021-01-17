@@ -5,10 +5,11 @@
  */
 package Adminstrador;
 
-import BD.Identidade;
+import BD.*;
 import Design.*;
 
 import Thread.MostrarInterface;
+import Thread.ProgressBar;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,8 +19,11 @@ import java.util.logging.Logger;
  * @author sofia
  */
 public class CadastrarEquipa extends javax.swing.JFrame {
+
     private DesignCadastrarEquipa design = new DesignCadastrarEquipa(this);
     private Identidade identidade = new Identidade();
+    private boolean update = false;
+    private int ID = 0;
 
     /**
      * Creates new form CadastrarEquipa
@@ -29,7 +33,7 @@ public class CadastrarEquipa extends javax.swing.JFrame {
 
         comboboxTipoFuncionario();
         erro.setVisible(false);
-        
+
         design.BotaoCancelar(botaoCancelar);
         design.BotaoProximo(BotaoProximo);
         design.BotaoAnterior(BotaoAnterior);
@@ -38,6 +42,7 @@ public class CadastrarEquipa extends javax.swing.JFrame {
         design.JTextField(nomeFuncionario, usernameFuncionario, password, repetirPassword);
         design.JCombobox(comboboxTipoFuncionario);
         design.textErro(erro);
+        design.progressBar(progressBar);
     }
 
     /**
@@ -64,6 +69,7 @@ public class CadastrarEquipa extends javax.swing.JFrame {
         repetirPasseText = new javax.swing.JLabel();
         password = new javax.swing.JPasswordField();
         erro = new javax.swing.JLabel();
+        progressBar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(900, 550));
@@ -121,7 +127,7 @@ public class CadastrarEquipa extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(51, 67, Short.MAX_VALUE)
+                .addGap(51, 279, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(titulo)
@@ -129,17 +135,20 @@ public class CadastrarEquipa extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(tipoText)
-                                .addGap(40, 40, 40)
-                                .addComponent(comboboxTipoFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(55, 55, 55)
-                                .addComponent(repetirPasseText, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(65, 65, 65))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(passeText, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(usernameText, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(tipoText)
+                                        .addGap(40, 40, 40)
+                                        .addComponent(comboboxTipoFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(55, 55, 55)
+                                        .addComponent(repetirPasseText, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(65, 65, 65)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(usernameFuncionario, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
                             .addComponent(repetirPassword)
@@ -154,7 +163,7 @@ public class CadastrarEquipa extends javax.swing.JFrame {
                         .addComponent(BotaoAnterior)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 38, Short.MAX_VALUE)
+                        .addGap(0, 250, Short.MAX_VALUE)
                         .addComponent(erro, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(190, 190, 190)))
                 .addComponent(BotaoProximo)
@@ -163,11 +172,11 @@ public class CadastrarEquipa extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addGap(52, 52, 52)
                     .addComponent(nomeText)
-                    .addContainerGap(577, Short.MAX_VALUE)))
+                    .addContainerGap(789, Short.MAX_VALUE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(129, 129, 129)
-                    .addComponent(nomeFuncionario, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
+                    .addComponent(nomeFuncionario, javax.swing.GroupLayout.DEFAULT_SIZE, 373, Short.MAX_VALUE)
                     .addGap(398, 398, 398)))
         );
         layout.setVerticalGroup(
@@ -179,7 +188,7 @@ public class CadastrarEquipa extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(usernameText)
                     .addComponent(usernameFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -202,20 +211,22 @@ public class CadastrarEquipa extends javax.swing.JFrame {
                         .addComponent(BotaoProximo)
                         .addGap(54, 54, 54))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(botaoCancelar)
-                            .addComponent(BotaoAnterior))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(botaoCancelar)
+                                .addComponent(BotaoAnterior)))
                         .addGap(42, 42, 42))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(137, 137, 137)
                     .addComponent(nomeText)
-                    .addContainerGap(249, Short.MAX_VALUE)))
+                    .addContainerGap(391, Short.MAX_VALUE)))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(140, 140, 140)
                     .addComponent(nomeFuncionario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(229, Short.MAX_VALUE)))
+                    .addContainerGap(371, Short.MAX_VALUE)))
         );
 
         pack();
@@ -223,17 +234,22 @@ public class CadastrarEquipa extends javax.swing.JFrame {
 
     private void BotaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoProximoActionPerformed
         String tipo = null;
-        if (((String) comboboxTipoFuncionario.getSelectedItem()).equals("Administrador")) {
-            tipo = "'Admin'";
-        } else if (((String) comboboxTipoFuncionario.getSelectedItem()).equals("Empregado de cozinha")) {
-            tipo = "'Cozinha'";
-        } else if (((String) comboboxTipoFuncionario.getSelectedItem()).equals("Empregado de Mesa")) {
-            tipo = "'Mesa'";
+        switch ((String) comboboxTipoFuncionario.getSelectedItem()) {
+            case "Administrador":
+                tipo = "'Admin'";
+                break;
+            case "Empregado de cozinha":
+                tipo = "'Cozinha'";
+                break;
+            case "Empregado de Mesa":
+                tipo = "'Mesa'";
+                break;
         }
-        if("".equals(nomeFuncionario.getText())){
+
+        if ("".equals(nomeFuncionario.getText())) {
             erro.setVisible(true);
             erro.setText("Tem de inserir o seu nome");
-        }else if ("".equals(usernameFuncionario.getText())) {
+        } else if ("".equals(usernameFuncionario.getText())) {
             erro.setVisible(true);
             erro.setText("Tem de inserir um nome de utilizador");
         } else if ("".equals(password.getText())) {
@@ -244,36 +260,51 @@ public class CadastrarEquipa extends javax.swing.JFrame {
             erro.setText("Tem de repetir a palavra-passe");
         } else {
             try {
-                if (password.getText().equals(repetirPassword.getText()) && identidade.verNomeUtilizadorRepetido(usernameFuncionario.getText(), tipo)) {
-                    erro.setVisible(false);
-                    Identidade i = new Identidade();
-                    try {
-                        i.mudarNomePasse(usernameFuncionario.getText(), password.getText());
-                    } catch (ClassNotFoundException | SQLException ex) {
-                        Logger.getLogger(CadastrarEquipa.class.getName()).log(Level.SEVERE, null, ex);
+                String nome = nomeFuncionario.getText();
+                String username = usernameFuncionario.getText();
+                String passe = password.getText();
+                System.out.println(update);
+                if (update) {
+
+                    if (password.getText().equals(repetirPassword.getText())) {
+                        erro.setVisible(false);
+                        identidade.updateFuncionario(ID, nome, username, passe, tipo);
+                        ProgressBar pb = new ProgressBar(progressBar);
+                        MostrarInterface mi = new MostrarInterface(this, new Equipa());
+                        pb.start();
+                        mi.start();
+
+                    } else {
+                        erro.setVisible(true);
+                        erro.setText("As palavras-passes não correspondem.");
                     }
-                    
-                    String nome = nomeFuncionario.getText();
-                    String username = usernameFuncionario.getText();
-                    String passe = password.getText();
+                } else {
+                    if (password.getText().equals(repetirPassword.getText()) && !identidade.verNomeUtilizadorRepetido(usernameFuncionario.getText(), tipo)) {
 
-                    identidade.novoFuncionario(nome, username, passe, tipo);
-                    // ProgressBar m = new ProgressBar(progressBar);
-                    MostrarInterface mi = new MostrarInterface(this, new ConfiguracaoInicial());
-                    //m.start();
-                    mi.start();
+                        erro.setVisible(false);
 
-                } else if (!identidade.verNomeUtilizadorRepetido(usernameFuncionario.getText(), tipo)) {
-                    erro.setVisible(true);
-                    erro.setText("Esse nome já existe.");
-                } else if (!password.getText().equals(repetirPassword.getText())) {
-                    erro.setVisible(true);
-                    erro.setText("As palavras-passes não correspondem.");
+                        identidade.novoFuncionario(nome, username, passe, tipo);
 
+                        ProgressBar pb = new ProgressBar(progressBar);
+                        MostrarInterface mi = new MostrarInterface(this, new Equipa());
+                        pb.start();
+                        mi.start();
+
+                    } else if (identidade.verNomeUtilizadorRepetido(usernameFuncionario.getText(), tipo)) {
+                        erro.setVisible(true);
+                        erro.setText("Esse nome de utilizador já existe.");
+
+                    } else if (!password.getText().equals(repetirPassword.getText())) {
+                        erro.setVisible(true);
+                        erro.setText("As palavras-passes não correspondem.");
+
+                    }
                 }
             } catch (ClassNotFoundException | SQLException ex) {
                 Logger.getLogger(CadastrarEquipa.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
+            update = false;
 
         }
     }//GEN-LAST:event_BotaoProximoActionPerformed
@@ -284,7 +315,8 @@ public class CadastrarEquipa extends javax.swing.JFrame {
             mi = new MostrarInterface(this, new ProdutosAdicionados());
             mi.start();
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(ProdutosAdicionados.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProdutosAdicionados.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_BotaoAnteriorActionPerformed
 
@@ -293,12 +325,44 @@ public class CadastrarEquipa extends javax.swing.JFrame {
 
         comboboxTipoFuncionario.removeAllItems();
 
-        String[] tipoFuncionario = {"Administrador", "Empregado de cozinha", "Empregado de Mesa"};
+        String[] tipoFuncionario = {"Administrador", "Empregado de cozinha", "Empregado de mesa"};
         for (String n : tipoFuncionario) {
             comboboxTipoFuncionario.addItem(n);
         }
 
         comboboxTipoFuncionario.setSelectedItem(o);
+    }
+
+    public void setComboboxTipoFuncionario(String funcionario) {
+        int n = 0;
+        while (!comboboxTipoFuncionario.getItemAt(n).equals(funcionario)) {
+            n++;
+        }
+        comboboxTipoFuncionario.setSelectedIndex(n);
+    }
+
+    public void setNomeFuncionario(String nomeFuncionario) {
+        this.nomeFuncionario.setText(nomeFuncionario);
+    }
+
+    public void setUsernameFuncionario(String usernameFuncionario) {
+        this.usernameFuncionario.setText(usernameFuncionario);
+    }
+
+    public void setPassword(String password) {
+        this.password.setText(password);
+    }
+
+    public void setRepetirPassword(String repetirPassword) {
+        this.repetirPassword.setText(repetirPassword);
+    }
+
+    public void setUpdate(boolean update) {
+        this.update = update;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     /**
@@ -318,21 +382,23 @@ public class CadastrarEquipa extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastrarEquipa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastrarEquipa.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastrarEquipa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastrarEquipa.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastrarEquipa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastrarEquipa.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastrarEquipa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(CadastrarEquipa.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new CadastrarEquipa().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new CadastrarEquipa().setVisible(true);
         });
     }
 
@@ -346,6 +412,7 @@ public class CadastrarEquipa extends javax.swing.JFrame {
     private javax.swing.JLabel nomeText;
     private javax.swing.JLabel passeText;
     private javax.swing.JPasswordField password;
+    private javax.swing.JProgressBar progressBar;
     private javax.swing.JLabel repetirPasseText;
     private javax.swing.JPasswordField repetirPassword;
     private javax.swing.JLabel tipoText;

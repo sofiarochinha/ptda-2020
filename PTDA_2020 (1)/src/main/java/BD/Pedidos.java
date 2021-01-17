@@ -13,7 +13,7 @@ import java.sql.SQLException;
  *
  * @author HP
  */
-public class Pedidos extends ConexaoBD{
+public class Pedidos extends VerDados{
     public String verPedido() throws ClassNotFoundException, SQLException{
         StringBuilder sb = new StringBuilder();
         String query = "select * from Pedido";

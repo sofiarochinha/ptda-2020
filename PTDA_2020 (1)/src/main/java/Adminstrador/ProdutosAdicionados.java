@@ -6,6 +6,7 @@
 package Adminstrador;
 
 import BD.Produtos;
+import BD.VerDados;
 import Design.DesignProdutosAdicionados;
 import Thread.MostrarInterface;
 import Thread.ProgressBar;
@@ -22,6 +23,7 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
 
     DesignProdutosAdicionados design = new DesignProdutosAdicionados(this);
     Produtos produto = new Produtos();
+    VerDados dados = new VerDados();
 
     public ProdutosAdicionados() throws ClassNotFoundException, SQLException {
         initComponents();
@@ -38,7 +40,7 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
         //selecionar um item por default
         listaCategoria.setSelectedIndex(0);
 
-        int id = produto.verID("Categoria", listaCategoria.getSelectedValue());
+        int id = dados.verID("Categoria", listaCategoria.getSelectedValue());
         String[] produtos = produto.nomeProdutosCategoria(id).split("\n");
 
         listaProdutos(produtos);
@@ -47,6 +49,11 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
         listaProdutos.setSelectedIndex(0);
     }
 
+    /**
+     * Descrição: Coloca na lista de categorias todas categorias que estam na BD 
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     public void listaCategorias() throws ClassNotFoundException, SQLException {
         DefaultListModel dlm = new DefaultListModel();
 
@@ -268,7 +275,7 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
         try {
             ProgressBar pb = new ProgressBar(progressBar);
             pb.start();
-            int id = produto.verID("Categoria", listaCategoria.getSelectedValue());
+            int id = dados.verID("Categoria", listaCategoria.getSelectedValue());
             String[] produtos = produto.nomeProdutosCategoria(id).split("\n");
 
             listaProdutos(produtos);
@@ -303,13 +310,13 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
             pb.start();
 
             //remove o produto do menu e da base de dados
-            int idProduto = produto.verID("Produto", listaProdutos.getSelectedValue());
+            int idProduto = dados.verID("Produto", listaProdutos.getSelectedValue());
 
-            produto.removerDado("Menu_Produto", null, idProduto, "ID_Produto");
-            produto.removerDado("Produto", null, idProduto, "ID");
+            dados.removerDado("Menu_Produto", null, idProduto, "ID_Produto");
+            dados.removerDado("Produto", null, idProduto, "ID");
 
             //atualiza a lista
-            int idCategoria = produto.verID("Categoria", listaCategoria.getSelectedValue());
+            int idCategoria = dados.verID("Categoria", listaCategoria.getSelectedValue());
             String[] produtos = produto.nomeProdutosCategoria(idCategoria).split("\n");
 
             listaProdutos(produtos);
@@ -328,22 +335,15 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
             pb.start();
 
             String[] dados = produto.dadosCadaProduto(listaProdutos.getSelectedValue()).split("\n");
-            String categoria = produto.dadosID(Integer.parseInt(dados[0]), "Categoria");//retorna a categoria associada
-            double preco = Double.parseDouble(dados[1]); //preco do produto
-            String descricao = dados[2];
-            String iva = produto.dadosID(Integer.parseInt(dados[3]), "Iva").trim();
-            String personalizacao = produto.dadosID(Integer.parseInt(dados[4]), "Personalizacao").trim();
-            int tempo = Integer.parseInt(dados[5]);
-            String nome = dados[6];
-
             AdicionarProduto ap = new AdicionarProduto();
-            ap.setComboboxCategoria(categoria);
-            ap.setSpinnerPreco(preco);
-            ap.setDescricao(descricao);
-            ap.setComboboxIva(iva + "%");
-            ap.setComboboxPersonalizacao(personalizacao);
-            ap.setSpinnerTempo(tempo);
-            ap.setEscreverNome(nome);
+            
+            ap.setComboboxCategoria(produto.dadosID(Integer.parseInt(dados[0]), "Categoria"));
+            ap.setSpinnerPreco(Double.parseDouble(dados[1]));
+            ap.setDescricao(dados[2]);
+            ap.setComboboxIva(produto.dadosID(Integer.parseInt(dados[3]), "Iva") + "%");
+            ap.setComboboxPersonalizacao(produto.dadosID(Integer.parseInt(dados[4]), "Personalizacao"));
+            ap.setSpinnerTempo(Integer.parseInt(dados[5]));
+            ap.setEscreverNome(dados[6]);
 
             mi = new MostrarInterface(this, ap);
             mi.start();

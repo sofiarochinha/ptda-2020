@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  *
  * @author HP
  */
-public class Menu extends ConexaoBD {
+public class Menu extends VerDados {
     private int pedido;
     public Menu(int pedido){
         this.pedido = pedido;
@@ -94,13 +94,13 @@ public class Menu extends ConexaoBD {
         return sb.toString();
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        Menu menu = new Menu(5);
-
-        try {
-            System.out.println(menu.verNomeProduto());
-        } catch (SQLException ex) {
-            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+//    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+//        Menu menu = new Menu(5);
+//
+//        try {
+//            System.out.println(menu.verNomeProduto());
+//        } catch (SQLException ex) {
+//            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
 }

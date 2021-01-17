@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  *
  * @author sofia
  */
-public class ConfiguracaoEstabelecimento extends ConexaoBD {
+public class ConfiguracaoEstabelecimento extends VerDados {
 
     public void inserirNumMesas(int numMesas) throws ClassNotFoundException, SQLException {
 
