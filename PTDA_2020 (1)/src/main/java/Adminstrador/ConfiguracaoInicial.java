@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Adminstrador;
 
 import Design.*;
@@ -13,26 +8,24 @@ import java.util.logging.Logger;
 import Thread.*;
 
 /**
- *
+ * Descricao: o admin indica quantas mesas tem o estabelecimento
  * @author sofia
  */
 public class ConfiguracaoInicial extends javax.swing.JFrame {
 
-    /**
-     * Creates new form ConfiguraçãoInicial
-     */
-    DesignConfiguracaoInicial design = new DesignConfiguracaoInicial(this);
+    DesignConfiguracaoInicial design;
     
     public ConfiguracaoInicial() {
         initComponents();
         
+        design = new DesignConfiguracaoInicial(this);
+        
         design.titulo(titulo);
         design.label(textoNumeroMesas);
         design.spinner(spinner);
-        design.textoErro(erro); //nao se vou usar mas vou deixar ficar
         design.BotaoCancelar(botaoCancelar);
         design.BotaoProximo(BotaoProximo);
-        erro.setVisible(false); // nao se vou usar mas vou deixar ficar
+        design.progressBar(progressBar);
 
     }
 
@@ -51,8 +44,8 @@ public class ConfiguracaoInicial extends javax.swing.JFrame {
         textoNumeroMesas = new javax.swing.JLabel();
         botaoCancelar = new javax.swing.JButton();
         BotaoProximo = new javax.swing.JButton();
-        erro = new javax.swing.JLabel();
         spinner = new javax.swing.JSpinner();
+        progressBar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("ConfiguracaoInicial"); // NOI18N
@@ -81,10 +74,8 @@ public class ConfiguracaoInicial extends javax.swing.JFrame {
             }
         });
 
-        erro.setText("jLabel1");
-
         spinner.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        spinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 20, 1));
+        spinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, null, 1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -94,15 +85,15 @@ public class ConfiguracaoInicial extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addComponent(botaoCancelar)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(228, 228, 228)
                 .addComponent(BotaoProximo, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(60, 60, 60))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(159, Short.MAX_VALUE)
+                .addContainerGap(387, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(titulo)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(erro, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(textoNumeroMesas, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(textoNumeroMesas))
                 .addGap(156, 156, 156))
             .addGroup(layout.createSequentialGroup()
                 .addGap(299, 299, 299)
@@ -118,12 +109,12 @@ public class ConfiguracaoInicial extends javax.swing.JFrame {
                 .addComponent(textoNumeroMesas)
                 .addGap(18, 18, 18)
                 .addComponent(spinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
-                .addComponent(erro)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(botaoCancelar)
-                    .addComponent(BotaoProximo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 257, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(botaoCancelar)
+                        .addComponent(BotaoProximo))
+                    .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(35, 35, 35))
         );
 
@@ -137,8 +128,10 @@ public class ConfiguracaoInicial extends javax.swing.JFrame {
         int num = (Integer) spinner.getValue(); //valor do tipo int
 
         try {
-            ce.inserirNumMesas(num);
+            ce.inserirNumMesas(num); // insere o numero de mesas na base de dados
+            ProgressBar m = new ProgressBar(progressBar);
             MostrarInterface mi = new MostrarInterface(this, new AdicionarProduto());
+            m.start();
             mi.start();
             
         } catch (ClassNotFoundException | SQLException ex) {
@@ -181,17 +174,15 @@ public class ConfiguracaoInicial extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ConfiguracaoInicial().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new ConfiguracaoInicial().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotaoProximo;
     private javax.swing.JButton botaoCancelar;
-    private javax.swing.JLabel erro;
+    private javax.swing.JProgressBar progressBar;
     private javax.swing.JSpinner spinner;
     private javax.swing.JLabel textoNumeroMesas;
     private javax.swing.JLabel titulo;

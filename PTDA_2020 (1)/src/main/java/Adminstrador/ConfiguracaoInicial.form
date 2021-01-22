@@ -31,17 +31,16 @@
               <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
               <Component id="botaoCancelar" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="32767" attributes="0"/>
+              <Component id="progressBar" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="228" max="-2" attributes="0"/>
               <Component id="BotaoProximo" min="-2" pref="113" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
-              <EmptySpace pref="159" max="32767" attributes="0"/>
+              <EmptySpace pref="387" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="titulo" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="erro" alignment="0" max="32767" attributes="0"/>
-                      <Component id="textoNumeroMesas" alignment="0" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="textoNumeroMesas" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="156" max="-2" attributes="0"/>
           </Group>
@@ -61,12 +60,13 @@
               <Component id="textoNumeroMesas" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="spinner" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
-              <Component id="erro" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="132" max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="botaoCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="BotaoProximo" alignment="3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="257" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="botaoCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="BotaoProximo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Component id="progressBar" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
           </Group>
@@ -113,20 +113,17 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BotaoProximoActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="erro">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jLabel1"/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JSpinner" name="spinner">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="SansSerif" size="18" style="0"/>
         </Property>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
-          <SpinnerModel initial="1" maximum="20" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
+          <SpinnerModel initial="1" minimum="1" numberType="java.lang.Integer" stepSize="1" type="number"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JProgressBar" name="progressBar">
     </Component>
   </SubComponents>
 </Form>

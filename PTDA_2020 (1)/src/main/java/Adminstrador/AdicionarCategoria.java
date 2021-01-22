@@ -2,6 +2,7 @@ package Adminstrador;
 
 import Design.*;
 import BD.*;
+import Thread.MostrarInterface;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,17 +15,21 @@ import javax.swing.DefaultListModel;
  */
 public class AdicionarCategoria extends javax.swing.JFrame {
 
-    DesignAdicionarCategoria design = new DesignAdicionarCategoria(this);
-    Produtos produto = new Produtos();
+    private final DesignAdicionarCategoria design; 
+    private final Produtos_Categorias produto;
 
-    short selecao;
-
+    private short selecao;
+    private boolean menu;
+    
     public AdicionarCategoria() throws ClassNotFoundException, SQLException {
         initComponents();
 
+        this.design = new DesignAdicionarCategoria(this);
+        this.produto = new Produtos_Categorias();
+        
         //design dos componentes
         design.titulo(titulo);
-        design.botao(adicionarCategoria, removerCategoria, cancelar);
+        design.botao(adicionarCategoria, removerCategoria, botaoCancelar);
         design.escrever(escreverCategoria);
         design.textoErro(erro);
 
@@ -43,7 +48,7 @@ public class AdicionarCategoria extends javax.swing.JFrame {
 
         DefaultListModel dlm = new DefaultListModel();
 
-        String[] categorias = produto.verDados("Categoria").split("\n");
+        String[] categorias = produto.verNome("Categoria").split("\n");
         
         for (String n : categorias) {
             dlm.addElement(n);
@@ -68,11 +73,10 @@ public class AdicionarCategoria extends javax.swing.JFrame {
         removerCategoria = new javax.swing.JButton();
         escreverCategoria = new javax.swing.JTextField();
         erro = new javax.swing.JLabel();
-        cancelar = new javax.swing.JButton();
+        botaoCancelar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("categoria"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(450, 350));
 
         titulo.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         titulo.setText("Categorias");
@@ -102,11 +106,11 @@ public class AdicionarCategoria extends javax.swing.JFrame {
         erro.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
         erro.setText("jLabel1");
 
-        cancelar.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        cancelar.setText("Cancelar");
-        cancelar.addActionListener(new java.awt.event.ActionListener() {
+        botaoCancelar.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoCancelar.setText("Cancelar");
+        botaoCancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cancelarActionPerformed(evt);
+                botaoCancelarActionPerformed(evt);
             }
         });
 
@@ -129,7 +133,7 @@ public class AdicionarCategoria extends javax.swing.JFrame {
                     .addComponent(adicionarCategoria)
                     .addComponent(erro, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(removerCategoria)
-                    .addComponent(cancelar)))
+                    .addComponent(botaoCancelar)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -147,7 +151,7 @@ public class AdicionarCategoria extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(removerCategoria)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cancelar))
+                        .addComponent(botaoCancelar))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(97, Short.MAX_VALUE))
         );
@@ -171,7 +175,7 @@ public class AdicionarCategoria extends javax.swing.JFrame {
             selecao = 1;
         } else {
             try {
-                if (selecao == 2 && produto.dadoProduto("Categoria", escreverCategoria.getText())) {
+                if (selecao == 2 && produto.nomeRepetido("Categoria", escreverCategoria.getText())) {
                     produto.adicionarDados("Categoria", escreverCategoria.getText());
                     categoriasLista();
                     selecao = 0;
@@ -193,7 +197,7 @@ public class AdicionarCategoria extends javax.swing.JFrame {
     private void removerCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerCategoriaActionPerformed
 
         try {
-            produto.removerDado("Categoria", listaCategorias.getSelectedValue(), 0, "Nome");
+            produto.removerCategoria(listaCategorias.getSelectedValue());
             categoriasLista();
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(AdicionarCategoria.class.getName()).log(Level.SEVERE, null, ex);
@@ -202,14 +206,32 @@ public class AdicionarCategoria extends javax.swing.JFrame {
 
     }//GEN-LAST:event_removerCategoriaActionPerformed
 
-    private void cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarActionPerformed
-        this.setVisible(false);
-        this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
-        this.dispose();
+    private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
+        if(menu){            
+            MostrarInterface mi = new MostrarInterface(this, new MenuInicial());
+            mi.start();
+        }else{
+            this.setVisible(false);
+            this.setDefaultCloseOperation(AdicionarCategoria.EXIT_ON_CLOSE);
+            this.dispose();
+        }
         
         
-    }//GEN-LAST:event_cancelarActionPerformed
+        
+        
+    }//GEN-LAST:event_botaoCancelarActionPerformed
 
+    public void interfaceMenu() {
+
+        
+        botaoCancelar.setText("Menu");
+        menu = true;
+
+    }
+    
+    public boolean menu(){
+        return menu;
+    }
     /**
      * @param args the command line arguments
      */
@@ -238,20 +260,18 @@ public class AdicionarCategoria extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new AdicionarCategoria().setVisible(true);
-                } catch (ClassNotFoundException | SQLException ex) {
-                    Logger.getLogger(AdicionarCategoria.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                new AdicionarCategoria().setVisible(true);
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(AdicionarCategoria.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton adicionarCategoria;
-    private javax.swing.JButton cancelar;
+    private javax.swing.JButton botaoCancelar;
     private javax.swing.JLabel erro;
     private javax.swing.JTextField escreverCategoria;
     private javax.swing.JScrollPane jScrollPane1;

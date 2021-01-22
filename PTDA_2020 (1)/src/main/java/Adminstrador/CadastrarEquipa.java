@@ -18,17 +18,24 @@ import java.util.logging.Logger;
  *
  * @author sofia
  */
-public class CadastrarEquipa extends javax.swing.JFrame {
+public final class CadastrarEquipa extends javax.swing.JFrame {
 
-    private DesignCadastrarEquipa design = new DesignCadastrarEquipa(this);
-    private Identidade identidade = new Identidade();
-    private boolean update = false;
-    private int ID = 0;
+    private final DesignCadastrarEquipa design;
+    private final Identidade identidade;
+    
+    private boolean update, menu;
+    private int ID;
 
     /**
      * Creates new form CadastrarEquipa
      */
     public CadastrarEquipa() {
+        this.design = new DesignCadastrarEquipa(this);
+        this.identidade = new Identidade();
+        this.update = false;
+        this.menu = false;
+        this.ID = 0;
+        
         initComponents();
 
         comboboxTipoFuncionario();
@@ -263,7 +270,6 @@ public class CadastrarEquipa extends javax.swing.JFrame {
                 String nome = nomeFuncionario.getText();
                 String username = usernameFuncionario.getText();
                 String passe = password.getText();
-                System.out.println(update);
                 if (update) {
 
                     if (password.getText().equals(repetirPassword.getText())) {
@@ -365,6 +371,11 @@ public class CadastrarEquipa extends javax.swing.JFrame {
         this.ID = ID;
     }
 
+    public void interfaceMenu() {
+        BotaoAnterior.setVisible(false);
+        BotaoProximo.setText("Adicionar");
+        menu = true;
+    }
     /**
      * @param args the command line arguments
      */

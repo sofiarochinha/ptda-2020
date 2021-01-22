@@ -14,13 +14,15 @@ import java.util.logging.Logger;
  */
 public class ConfigurarConta extends javax.swing.JFrame {
 
-    private DesignConfigurarConta design = new DesignConfigurarConta(this);
-    private Identidade identidade = new Identidade();
+    private final DesignConfigurarConta design;
+    private final Identidade identidade;
 
     public ConfigurarConta() {
         initComponents();
 
-        erroPasse.setVisible(false);
+        this.design = new DesignConfigurarConta(this);
+        this.identidade = new Identidade();
+        erro.setVisible(false);
 
         //design dos componentes
         design.titulo(tituloConfigurarConta);
@@ -29,14 +31,12 @@ public class ConfigurarConta extends javax.swing.JFrame {
 
         design.label(textoNomeUtilizador, textoNovaPasse, textoRepetirPasse);
         design.textField(escreverNomeUtilizador, escreverNovaPasse, repetirPasse);
-        design.textoErro(erroPasse);
+        design.textoErro(erro);
 
         design.progressBar(progressBar);
 
         //barra de progresso
-        progressBar.setStringPainted(true);
-        progressBar.setValue(0);
-        progressBar.setString(0 + "%");
+        
     }
 
     /**
@@ -58,7 +58,7 @@ public class ConfigurarConta extends javax.swing.JFrame {
         progressBar = new javax.swing.JProgressBar();
         escreverNovaPasse = new javax.swing.JPasswordField();
         repetirPasse = new javax.swing.JPasswordField();
-        erroPasse = new javax.swing.JLabel();
+        erro = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("ConfigurarConta"); // NOI18N
@@ -101,7 +101,7 @@ public class ConfigurarConta extends javax.swing.JFrame {
             }
         });
 
-        erroPasse.setText("jLabel1");
+        erro.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -120,7 +120,7 @@ public class ConfigurarConta extends javax.swing.JFrame {
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(124, 124, 124))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(erroPasse, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(erro, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addComponent(BotaoProximo, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30))
@@ -158,10 +158,10 @@ public class ConfigurarConta extends javax.swing.JFrame {
                         .addComponent(botaoCancelar)
                         .addComponent(BotaoProximo))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(erroPasse)
+                        .addComponent(erro)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addContainerGap(133, Short.MAX_VALUE))
         );
 
         pack();
@@ -172,36 +172,38 @@ public class ConfigurarConta extends javax.swing.JFrame {
     }//GEN-LAST:event_escreverNomeUtilizadorActionPerformed
 
     private void BotaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoProximoActionPerformed
-  
         try {
             if ("".equals(escreverNomeUtilizador.getText())) {
-                erroPasse.setVisible(true);
-                erroPasse.setText("Tem de inserir um nome de utilizador");
+                erro.setVisible(true);
+                erro.setText("Tem de inserir um nome de utilizador.");
             } else if ("".equals(escreverNovaPasse.getText())) {
-                erroPasse.setVisible(true);
-                erroPasse.setText("Tem de inserir uma palavra-passe");
+                erro.setVisible(true);
+                erro.setText("Tem de inserir uma palavra-passe.");
             } else if ("".equals(repetirPasse.getText())) {
-                erroPasse.setVisible(true);
-                erroPasse.setText("Tem de repetir a palavra-passe");
+                erro.setVisible(true);
+                erro.setText("Tem de repetir a palavra-passe.");
+            } else if (escreverNomeUtilizador.getText().toLowerCase().equals("admin")) {
+                erro.setVisible(true);
+                erro.setText("Tem de escolher um nome de utilizador diferente do padrão.");
+            } else if (escreverNovaPasse.getText().toLowerCase().equals("admin")) {
+                erro.setVisible(true);
+                erro.setText("Tem de escolher uma palavra-passe diferente do padrão.");
+            } else if (identidade.verNomeUtilizadorRepetido(escreverNomeUtilizador.getText(), "'Admin'")) {
+                erro.setVisible(true);
+                erro.setText("Esse nome já existe.");
+            } else if (!escreverNovaPasse.getText().equals(repetirPasse.getText())) {
+                erro.setVisible(true);
+                erro.setText("As palavras-passes não correspondem.");
+                
             } else {
-                if (escreverNovaPasse.getText().equals(repetirPasse.getText()) && identidade.verNomeUtilizadorRepetido(escreverNomeUtilizador.getText(), "'Admin'")) {
-                    erroPasse.setVisible(false);
-                    Identidade i = new Identidade();
-                    i.mudarNomePasse(escreverNomeUtilizador.getText(), escreverNovaPasse.getText());
-
-                    ProgressBar m = new ProgressBar(progressBar);
-                    MostrarInterface mi = new MostrarInterface(this, new ConfiguracaoInicial());
-                    m.start();
-                    mi.start();
-
-                } else if (!identidade.verNomeUtilizadorRepetido(escreverNomeUtilizador.getText(), "'Admin'")) {
-                    erroPasse.setVisible(true);
-                    erroPasse.setText("Esse nome já existe.");
-                } else if (!escreverNovaPasse.getText().equals(repetirPasse.getText())) {
-                    erroPasse.setVisible(true);
-                    erroPasse.setText("As palavras-passes não correspondem.");
-
-                }
+                erro.setVisible(false);
+                identidade.mudarNomePasse(escreverNomeUtilizador.getText(), escreverNovaPasse.getText());
+                
+                ProgressBar m = new ProgressBar(progressBar);
+                MostrarInterface mi = new MostrarInterface(this, new ConfiguracaoInicial());
+                m.start();
+                mi.start();
+                
             }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ConfigurarConta.class.getName()).log(Level.SEVERE, null, ex);
@@ -230,29 +232,23 @@ public class ConfigurarConta extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ConfigurarConta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ConfigurarConta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ConfigurarConta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(ConfigurarConta.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        
+        //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new ConfigurarConta().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new ConfigurarConta().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BotaoProximo;
     private javax.swing.JButton botaoCancelar;
-    private javax.swing.JLabel erroPasse;
+    private javax.swing.JLabel erro;
     private javax.swing.JTextField escreverNomeUtilizador;
     private javax.swing.JPasswordField escreverNovaPasse;
     private javax.swing.JProgressBar progressBar;

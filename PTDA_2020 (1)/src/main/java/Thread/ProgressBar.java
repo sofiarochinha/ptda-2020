@@ -26,7 +26,7 @@ public class ProgressBar extends Thread {
   @Override
   public void run() {
         
-       for (int x = 0; x<100; x++){
+       for (int x = 0; x<=100; x++){
            
            nome.setValue(x);
            nome.setString(x + "%");

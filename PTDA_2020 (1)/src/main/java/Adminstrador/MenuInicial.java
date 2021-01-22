@@ -5,17 +5,31 @@
  */
 package Adminstrador;
 
+import Design.Design;
+import Thread.MostrarInterface;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+
 /**
  *
  * @author sofia
  */
 public class MenuInicial extends javax.swing.JFrame {
 
+    private final Design design;
     /**
      * Creates new form MenuInicial
      */
     public MenuInicial() {
+        this.design = new Design(this);
+        
         initComponents();
+        
+        design.titulo(titulo);
+        design.BotaoCancelar(botaoTerminarSessao);
+        
     }
 
     /**
@@ -27,33 +41,147 @@ public class MenuInicial extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        tituloMenu = new javax.swing.JLabel();
+        titulo = new javax.swing.JLabel();
+        botaoProdutos = new javax.swing.JButton();
+        botaoMenu = new javax.swing.JButton();
+        botaoCategorias = new javax.swing.JButton();
+        botaoEquipa = new javax.swing.JButton();
+        botaoFaturacao = new javax.swing.JButton();
+        botaoTerminarSessao = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("MenuInicial"); // NOI18N
 
-        tituloMenu.setFont(new java.awt.Font("SansSerif", 0, 36)); // NOI18N
-        tituloMenu.setText("Menu inicial");
+        titulo.setFont(new java.awt.Font("SansSerif", 0, 36)); // NOI18N
+        titulo.setText("Menu inicial");
+
+        botaoProdutos.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoProdutos.setText("Produtos");
+        botaoProdutos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoProdutosActionPerformed(evt);
+            }
+        });
+
+        botaoMenu.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoMenu.setText("Menus");
+
+        botaoCategorias.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoCategorias.setText("Categorias");
+        botaoCategorias.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoCategoriasActionPerformed(evt);
+            }
+        });
+
+        botaoEquipa.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoEquipa.setText("Equipa");
+        botaoEquipa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoEquipaActionPerformed(evt);
+            }
+        });
+
+        botaoFaturacao.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoFaturacao.setText("Faturação");
+
+        botaoTerminarSessao.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        botaoTerminarSessao.setText("Sair");
+        botaoTerminarSessao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoTerminarSessaoActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(252, Short.MAX_VALUE)
-                .addComponent(tituloMenu)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(titulo)
                 .addGap(154, 154, 154))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(botaoTerminarSessao)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(botaoProdutos, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36)
+                        .addComponent(botaoMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(46, 46, 46)
+                        .addComponent(botaoCategorias, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36)
+                        .addComponent(botaoEquipa)
+                        .addGap(54, 54, 54)
+                        .addComponent(botaoFaturacao)))
+                .addContainerGap(195, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tituloMenu)
-                .addContainerGap(245, Short.MAX_VALUE))
+                .addComponent(titulo)
+                .addGap(45, 45, 45)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(botaoProdutos, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(botaoMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botaoCategorias, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(botaoEquipa)
+                        .addComponent(botaoFaturacao)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 159, Short.MAX_VALUE)
+                .addComponent(botaoTerminarSessao)
+                .addGap(176, 176, 176))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void botaoProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoProdutosActionPerformed
+        
+        try {
+            ProdutosAdicionados produtos = new ProdutosAdicionados();
+            produtos.interfaceMenu();
+            MostrarInterface mi = new MostrarInterface(this, produtos);
+            mi.start();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(MenuInicial.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_botaoProdutosActionPerformed
+
+    private void botaoEquipaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEquipaActionPerformed
+         
+        try {
+            Equipa equipa = new Equipa();
+            equipa.interfaceMenu();
+            MostrarInterface mi = new MostrarInterface(this, equipa);
+            mi.start();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(MenuInicial.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_botaoEquipaActionPerformed
+
+    private void botaoCategoriasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCategoriasActionPerformed
+        
+        try {
+            AdicionarCategoria categorias = new AdicionarCategoria();
+            categorias.interfaceMenu();
+            MostrarInterface mi = new MostrarInterface(this, categorias);
+            mi.start();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(MenuInicial.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_botaoCategoriasActionPerformed
+
+    private void botaoTerminarSessaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoTerminarSessaoActionPerformed
+        
+        Aplicacao aplicacao = new Aplicacao();
+            MostrarInterface mi = new MostrarInterface(this, aplicacao);
+            mi.start();
+            
+            
+    }//GEN-LAST:event_botaoTerminarSessaoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -83,14 +211,18 @@ public class MenuInicial extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MenuInicial().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new MenuInicial().setVisible(true);
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel tituloMenu;
+    private javax.swing.JButton botaoCategorias;
+    private javax.swing.JButton botaoEquipa;
+    private javax.swing.JButton botaoFaturacao;
+    private javax.swing.JButton botaoMenu;
+    private javax.swing.JButton botaoProdutos;
+    private javax.swing.JButton botaoTerminarSessao;
+    private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
 }

@@ -6,7 +6,6 @@ public class Identidade extends VerDados {
 
     /**
      * Descricao: Verifica se o username e a password coincidem
-     *
      * @param tipoFuncionario
      * @param nome
      * @param pass
@@ -39,6 +38,7 @@ public class Identidade extends VerDados {
      * funcao
      *
      * @param nomeUtilizador
+     * @param Funcao
      * @return
      * @throws ClassNotFoundException
      * @throws SQLException

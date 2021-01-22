@@ -19,22 +19,39 @@ import javax.swing.DefaultListModel;
  */
 public class Equipa extends javax.swing.JFrame {
 
-    private Identidade identidade = new Identidade();
-    private int selecionado = 0;
-    private Design design = new Design(this);
-    private String funcao = null;
-    private VerDados dados = new VerDados();
+    private final Identidade identidade;
+    private final DesignEquipa design;
+    private final VerDados dados;
+
+    private String funcao;
+    private int selecionado;
+    private boolean menu;
 
     /**
      * Creates new form Equipa
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.sql.SQLException
      */
     public Equipa() throws ClassNotFoundException, SQLException {
         initComponents();
 
+        this.identidade = new Identidade();
+        this.selecionado = 0;
+        this.design = new DesignEquipa(this);
+        this.funcao = null;
+        this.dados = new VerDados();
+        this.menu = false;
+
         listas();
         design.titulo(titulo);
         design.progressBar(progressBar);
-
+        design.BotaoAnterior(BotaoAnterior);
+        design.BotaoProximo(BotaoProximo);
+        design.BotaoCancelar(botaoCancelar);
+        design.JButton(botaoAdicionar, botaoAlterar, botaoRemover);
+        design.menuTab(jTabbedPane1);
+        
+        
     }
 
     /**
@@ -92,7 +109,7 @@ public class Equipa extends javax.swing.JFrame {
         titulo = new javax.swing.JLabel();
         BotaoProximo = new javax.swing.JButton();
         botaoCancelar = new javax.swing.JButton();
-        BotaoProximo1 = new javax.swing.JButton();
+        BotaoAnterior = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         listaAdmin = new javax.swing.JList<>();
@@ -111,15 +128,20 @@ public class Equipa extends javax.swing.JFrame {
         titulo.setText("A sua equipa");
 
         BotaoProximo.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        BotaoProximo.setText("Próximo");
+        BotaoProximo.setText("Menu");
         BotaoProximo.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        BotaoProximo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BotaoProximoActionPerformed(evt);
+            }
+        });
 
         botaoCancelar.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         botaoCancelar.setText("Cancelar");
 
-        BotaoProximo1.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        BotaoProximo1.setText("Anterior");
-        BotaoProximo1.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
+        BotaoAnterior.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        BotaoAnterior.setText("Anterior");
+        BotaoAnterior.setDebugGraphicsOptions(javax.swing.DebugGraphics.NONE_OPTION);
 
         jTabbedPane1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -180,17 +202,18 @@ public class Equipa extends javax.swing.JFrame {
                         .addGap(32, 32, 32)
                         .addComponent(botaoCancelar)
                         .addGap(18, 18, 18)
-                        .addComponent(BotaoProximo1)
+                        .addComponent(BotaoAnterior)
                         .addGap(84, 84, 84)
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(61, 61, 61)
                         .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 576, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(67, 67, 67)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(botaoAdicionar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(botaoRemover, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(botaoAlterar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(botaoAdicionar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(botaoAlterar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(botaoRemover))))
                 .addContainerGap(104, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -207,9 +230,9 @@ public class Equipa extends javax.swing.JFrame {
                         .addComponent(botaoAdicionar)
                         .addGap(27, 27, 27)
                         .addComponent(botaoAlterar)
-                        .addGap(28, 28, 28)
+                        .addGap(18, 18, 18)
                         .addComponent(botaoRemover)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(BotaoProximo)
@@ -217,7 +240,7 @@ public class Equipa extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(botaoCancelar)
-                            .addComponent(BotaoProximo1))
+                            .addComponent(BotaoAnterior))
                         .addGap(39, 39, 39))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -305,19 +328,31 @@ public class Equipa extends javax.swing.JFrame {
             equipa.setRepetirPassword(dados[1]);
             equipa.setUpdate(true);
             equipa.setID(this.dados.verID("Funcionario", nome));
-            
+
             MostrarInterface mi;
             mi = new MostrarInterface(this, equipa);
             mi.start();
             ProgressBar pb = new ProgressBar(progressBar);
             pb.start();
-            
+
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Equipa.class.getName()).log(Level.SEVERE, null, ex);
         }
 
 
     }//GEN-LAST:event_botaoAlterarActionPerformed
+
+    private void BotaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoProximoActionPerformed
+        MostrarInterface mi = new MostrarInterface(this, new MenuInicial());
+        mi.start();
+        ProgressBar pb = new ProgressBar(progressBar);
+        pb.start();
+    }//GEN-LAST:event_BotaoProximoActionPerformed
+
+    public void interfaceMenu() {
+        BotaoAnterior.setVisible(false);
+        menu = true;
+    }
 
     /**
      * @param args the command line arguments
@@ -357,8 +392,8 @@ public class Equipa extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton BotaoAnterior;
     private javax.swing.JButton BotaoProximo;
-    private javax.swing.JButton BotaoProximo1;
     private javax.swing.JButton botaoAdicionar;
     private javax.swing.JButton botaoAlterar;
     private javax.swing.JButton botaoCancelar;

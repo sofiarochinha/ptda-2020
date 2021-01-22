@@ -19,13 +19,18 @@ import java.util.logging.Logger;
  */
 public class Personalizacao extends javax.swing.JFrame {
 
-    DesignAdicionarCategoria design = new DesignAdicionarCategoria(this);
-    Produtos produto = new Produtos();
-    short selecao = 0;
+    private final DesignAdicionarCategoria design; 
+    private final Produtos_Categorias produto; 
+    private short selecao;
 
     public Personalizacao() throws ClassNotFoundException, SQLException {
         initComponents();
 
+        this.produto = new Produtos_Categorias();
+        this.design = new DesignAdicionarCategoria(this);
+        this.selecao = 0;
+        
+        
         design.titulo(titulo);
         design.botao(adicionarPersonalizacao, removerPersonalizacao, cancelar);
         design.escrever(escreverPersonalizacao);
@@ -41,11 +46,9 @@ public class Personalizacao extends javax.swing.JFrame {
 
         DefaultListModel dlm = new DefaultListModel();
 
-        String nome = produto.verDados("Personalizacao");
-        String[] personalizacao = nome.split("\n");
-        for (String n : personalizacao) {
+        String[] personalizacao = produto.verNome("Personalizacao").split("\n");
+        for (String n : personalizacao)
             dlm.addElement(n);
-        }
 
         listaPersonalizacao.setModel(dlm);
     }
@@ -180,7 +183,7 @@ public class Personalizacao extends javax.swing.JFrame {
                 selecao = 1;
             } else {
                 try {
-                    if (selecao == 2 && produto.dadoProduto("Personalizacao", escreverPersonalizacao.getText())) {
+                    if (selecao == 2 && produto.nomeRepetido("Personalizacao", escreverPersonalizacao.getText())) {
                         produto.adicionarDados("Personalizacao", escreverPersonalizacao.getText());
                         personalizacaoLista();
                         selecao = 0;
@@ -202,7 +205,7 @@ public class Personalizacao extends javax.swing.JFrame {
 
     private void removerPersonalizacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerPersonalizacaoActionPerformed
         try {
-            produto.removerDado("Personalizacao", listaPersonalizacao.getSelectedValue(), 0, "Nome");
+            produto.removerPersonalizacao(listaPersonalizacao.getSelectedValue());
             personalizacaoLista();
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(AdicionarCategoria.class.getName()).log(Level.SEVERE, null, ex);
@@ -244,13 +247,11 @@ public class Personalizacao extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new Personalizacao().setVisible(true);
-                } catch (ClassNotFoundException | SQLException ex) {
-                    Logger.getLogger(Personalizacao.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                new Personalizacao().setVisible(true);
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(Personalizacao.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }

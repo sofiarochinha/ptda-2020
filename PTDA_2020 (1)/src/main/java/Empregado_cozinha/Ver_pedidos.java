@@ -29,7 +29,7 @@ public class Ver_pedidos extends javax.swing.JFrame {
         PedidosLista.setSelectedIndex(0);
         String [] array = PedidosLista.getSelectedValue().split(" "); 
         menu = new Menu(parseInt(array[1]));
-        produtosMenuPedido();
+//        produtosMenuPedido();
     }
 
     /**
@@ -140,13 +140,13 @@ public class Ver_pedidos extends javax.swing.JFrame {
     private void ProdutosPedidoListaMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ProdutosPedidoListaMouseEntered
         String [] array = PedidosLista.getSelectedValue().split(" ");
         menu.setPedido(parseInt(array[1]));
-        try {
-            produtosMenuPedido();
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Ver_pedidos.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(Ver_pedidos.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            produtosMenuPedido();
+//        } catch (ClassNotFoundException ex) {
+//            Logger.getLogger(Ver_pedidos.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(Ver_pedidos.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         
     }//GEN-LAST:event_ProdutosPedidoListaMouseEntered
 
@@ -171,18 +171,17 @@ public class Ver_pedidos extends javax.swing.JFrame {
         PedidosLista.setModel(dlm);
     }
     
-    public void produtosMenuPedido() throws ClassNotFoundException, SQLException{
-        DefaultListModel dlm = new DefaultListModel();
-
-        String nome = menu.verNomeProduto();
-        System.out.println(nome);
-        String[] produto = nome.split(" ");
-        for (String n : produto) {
-            dlm.addElement(n);
-        }
-        
-        ProdutosPedidoLista.setModel(dlm);
-    }
+//    public void produtosMenuPedido() throws ClassNotFoundException, SQLException{
+//        DefaultListModel dlm = new DefaultListModel();
+//
+//        
+//        String[] produto = menu.verNomeProduto().split(" ");
+//        for (String n : produto) {
+//            dlm.addElement(n);
+//        }
+//        
+//        ProdutosPedidoLista.setModel(dlm);
+//    }
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

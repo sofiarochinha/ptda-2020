@@ -72,10 +72,10 @@ public class DesignAdicionarProdutos extends Design{
         
         frame.setLayout(null);
         
-        nome.setBounds(65, (frame.getSize().height/2)-160, sizeNome.width, sizeNome.height);
-        descricao.setBounds((frame.getSize().width/2)-(descricao.getSize().width/2), (frame.getSize().height/2)-160, sizeDescricao.width, sizeDescricao.height);
-        personalizacao.setBounds((frame.getSize().width)-(personalizacao.getSize().width)-140, (frame.getSize().height/2)-160, sizePersonalizacao.width, sizePersonalizacao.height);
-        categoria.setBounds(625, (frame.getSize().height/2)-70, sizeCategoria.width, sizeCategoria.height);
+        nome.setBounds(65, 130, sizeNome.width, sizeNome.height);
+        descricao.setBounds((frame.getSize().width/2)-(descricao.getSize().width/2), 130, sizeDescricao.width, sizeDescricao.height);
+        personalizacao.setBounds(625, 130, sizePersonalizacao.width, sizePersonalizacao.height);
+        categoria.setBounds(625, 230, sizeCategoria.width, sizeCategoria.height);
         
         tempo.setBounds(65, (frame.getSize().height/2)-100, sizeTempo.width, sizeTempo.height);
         preco.setBounds(65, (frame.getSize().height/2)-40, sizePreco.width, sizePreco.height);
@@ -90,7 +90,7 @@ public class DesignAdicionarProdutos extends Design{
         Dimension sizeBotao = adicionarCategoria.getPreferredSize();
         frame.setLayout(null);
         
-        adicionarCategoria.setBounds(272, (frame.getSize().height/2+50), 110, 34);
+        adicionarCategoria.setBounds(625, 300, 110, 34);
         
     }
     
@@ -101,8 +101,8 @@ public class DesignAdicionarProdutos extends Design{
         Dimension sizeIva = iva.getPreferredSize();
         frame.setLayout(null);
         
-        categoria.setBounds(625, (frame.getSize().height/2)-20, 200, sizeCategoria.height);
-        personalizacao.setBounds(625, (frame.getSize().height/2)-110, 200, sizePersonalizacao.height);
+        categoria.setBounds(625, 260, 200, sizeCategoria.height);
+        personalizacao.setBounds(625, 160, 200, sizePersonalizacao.height);
         
         //iva
         iva.setBounds(132, frame.getSize().height-255, sizeIva.width, sizeIva.height);
@@ -114,7 +114,7 @@ public class DesignAdicionarProdutos extends Design{
         Dimension sizeErro = erro.getPreferredSize();
         frame.setLayout(null);
         
-        erro.setBounds(65, 145, sizeErro.width, sizeErro.height);
+        erro.setBounds(65, 160, sizeErro.width, sizeErro.height);
         
     }
 }

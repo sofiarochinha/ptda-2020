@@ -18,8 +18,8 @@ import javax.swing.JFrame;
  */
 public class MostrarInterface extends Thread{
     
-    JFrame atual;
-    JFrame posterior;
+    private final JFrame atual;
+    private final JFrame posterior;
 
     public MostrarInterface(JFrame atual, JFrame posterior) {
         this.atual = atual;
@@ -39,7 +39,13 @@ public class MostrarInterface extends Thread{
         
         Thread.sleep(500);
         posterior.setVisible(true);
-               
+         
+        if(atual.getName().equals("MenuInicial") && posterior.getName().equals("Login") || 
+                atual.getName().equals("MenuInicial") && posterior.getName().equals("categoria")){
+           atual.setVisible(false);
+           atual.setDefaultCloseOperation(atual.EXIT_ON_CLOSE);
+           atual.dispose(); 
+        }
         if(!posterior.getName().equals("Login") && !posterior.getName().equals("personalizacao")
                 && !posterior.getName().equals("categoria")){ 
             atual.setVisible(false);

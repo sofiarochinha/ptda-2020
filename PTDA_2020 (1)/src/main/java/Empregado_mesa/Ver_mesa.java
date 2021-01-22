@@ -5,7 +5,6 @@
  */
 package Empregado_mesa;
 
-import Adminstrador.*;
 import Design.*;
 import java.sql.SQLException;
 import javax.swing.DefaultListModel;
@@ -18,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author sofia
  */
-public class Ver_mesa extends javax.swing.JFrame {
+public final class Ver_mesa extends javax.swing.JFrame {
 
     DesignAdicionarCategoria design = new DesignAdicionarCategoria(this);
     ConfiguracaoEstabelecimento mesa = new ConfiguracaoEstabelecimento();
@@ -132,13 +131,11 @@ public class Ver_mesa extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new Ver_mesa().setVisible(true);
-                } catch (ClassNotFoundException | SQLException ex) {
-                    Logger.getLogger(Ver_mesa.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                new Ver_mesa().setVisible(true);
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(Ver_mesa.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }

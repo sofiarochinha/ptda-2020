@@ -82,4 +82,70 @@ public class VerDados extends ConexaoBD{
 
         super.conexao().close();
     }
+    
+     /**
+     * Descricao: retorna o nome de todos os tuplos de uma tabela escolhida
+     *
+     * @param tabela
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
+    public String verNome(String tabela) throws ClassNotFoundException, SQLException {
+
+        StringBuilder dados = new StringBuilder();
+
+        String query = "select * from " + tabela;
+
+        PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
+        preparedStmtSelect.execute();
+
+        ResultSet rs = preparedStmtSelect.getResultSet();
+
+        while (rs.next()) {
+            dados.append(rs.getString("Nome")).append("\n");
+        }
+
+        super.conexao().close();
+
+        return dados.toString();
+    }
+    
+    /**
+     * Descriçao: verifica se tem um nome igual na tabela escolhida
+     *
+     * @param tabela
+     * @param nome
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
+    public boolean nomeRepetido(String tabela, String nome) throws ClassNotFoundException, SQLException {
+
+        String query = "select * from " + tabela;
+
+        PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
+        preparedStmtSelect.execute();
+
+        ResultSet rs = preparedStmtSelect.getResultSet();
+
+        while (rs.next()) {
+            if (nome.equals(rs.getString("Nome"))) {
+                return false;
+            }
+        }
+
+        super.conexao().close();
+
+        return true;
+    }
+    
+   
 }
+
+
+
+
+
+
+

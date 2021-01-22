@@ -1,69 +1,48 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package Adminstrador;
 
 import BD.*;
 import Design.*;
+import Empregado_mesa.*;
+import Empregado_cozinha.*;
 import Thread.MostrarInterface;
-import java.awt.DisplayMode;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 
-import Empregado_mesa.*;
-
-import Empregado_cozinha.*;
-
-/**         Codigo para abrir uma nova janela
- *          teste t = new teste();
- *           t.setSize(270, 160);
- *           t.setVisible(true);
- *           this.setVisible(false);
- *           this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
- *           this.dispose();
- *           
- * 
+/**
+ * Primeira interface da aplicação que irá iniciar sessãodo utilizador
+ * @author sofia
  */
 public class Aplicacao extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Aplicacao
-     */
-    private String tipoFuncionario = null;
-    private Identidade c = new Identidade();
-    
-    private Design design = new Design(this);
-    
+    private String tipoFuncionario;
+    private final Identidade identidade;
+    private final Design design;
+
     public Aplicacao() {
         initComponents();
-        
-        
-        this.setVisible(true);
-        
+
+        tipoFuncionario = "'Admin";
+        identidade = new Identidade();
+        design = new Design(this);
+
         MostrarInterface mi = new MostrarInterface(this, this);
         mi.start();
-        
+
         erro.setVisible(false);
         buttonGroup1.add(BotaoAdmin);
         buttonGroup1.add(BotaoEmpregadoCozinha);
         buttonGroup1.add(BotaoEmpregadoMesa);
-        
+
         //design dos componentes
         design.BotaoCentro(BotaoSessao);
         design.textoErro(erro);
         design.titulo(tituloSessao);
-        
-        
-    }
-    
 
- 
+        BotaoAdmin.setSelected(true);
+
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -96,6 +75,7 @@ public class Aplicacao extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Login");
         setName("Login"); // NOI18N
 
         tituloSessao.setFont(new java.awt.Font("SansSerif", 0, 36)); // NOI18N
@@ -111,7 +91,7 @@ public class Aplicacao extends javax.swing.JFrame {
         });
 
         BotaoSessao.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        BotaoSessao.setText("Iniciar sessão");
+        BotaoSessao.setText("Entrar");
         BotaoSessao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BotaoSessaoActionPerformed(evt);
@@ -210,60 +190,54 @@ public class Aplicacao extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void escreverUsernameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_escreverUsernameActionPerformed
-      
+
     }//GEN-LAST:event_escreverUsernameActionPerformed
 
     private void BotaoSessaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoSessaoActionPerformed
-       
-        if(tipoFuncionario == null){ //verificar se o utilizador selecionou alguma opcao do tipo de funcionario
-            erro.setVisible(true);
-            erro.setText("Tem de selecionar a sua função.");
-            
-        }else{
-            try {  
-                //verifica se o username e a password sao coincidentes  
-                if(c.verPassword(tipoFuncionario,escreverUsername.getText(), escreverPassword.getText())){
-                    
-                    switch(tipoFuncionario){
-                        case "'Mesa'":
-                            MostrarInterface mi = new MostrarInterface(this, new Ver_mesa());
-                    mi.start();
-                    break;
-                    
-                        case "'Admin'":
-                            mi = new MostrarInterface(this, new ConfigurarConta());
-                    mi.start();
-                    break;
-                        case "'Cozinha'":
-                            mi = new MostrarInterface(this, new Ver_pedidos());
-                    mi.start();
-                    break;
-                        default: erro.setText("Opção Inválida");
-                    }
-                    
-                }
-                
-                else{
-                    erro.setVisible(true);
-                    erro.setText("O nome de utilizador e a palavra-passe não coincidem.");
+
+        try {
+            //verifica se o username e a password sao coincidentes  
+            if (identidade.verPassword(tipoFuncionario, escreverUsername.getText(), escreverPassword.getText())) {
+
+                switch (tipoFuncionario) {
+                    case "'Mesa'":
+                        MostrarInterface mi = new MostrarInterface(this, new Ver_mesa());
+                        mi.start();
+                        break;
+
+                    case "'Admin'":
+                        mi = new MostrarInterface(this, new ConfigurarConta());
+                        mi.start();
+                        break;
+                    case "'Cozinha'":
+                        mi = new MostrarInterface(this, new Ver_pedidos());
+                        mi.start();
+                        break;
+                    default:
+                        erro.setText("Opção Inválida");
                 }
 
-            } catch (ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(Aplicacao.class.getName()).log(Level.SEVERE, null, ex);
-            }  
+            } else {
+                erro.setVisible(true);
+                erro.setText("O nome de utilizador e a palavra-passe não coincidem.");
+            }
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(Aplicacao.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }//GEN-LAST:event_BotaoSessaoActionPerformed
 
     private void BotaoAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAdminActionPerformed
         erro.setVisible(false);
         tipoFuncionario = "'Admin'";
-                
+
     }//GEN-LAST:event_BotaoAdminActionPerformed
 
     private void BotaoEmpregadoMesaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoEmpregadoMesaActionPerformed
         erro.setVisible(false);
         tipoFuncionario = "'Mesa'";
-        
+
     }//GEN-LAST:event_BotaoEmpregadoMesaActionPerformed
 
     private void BotaoEmpregadoCozinhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoEmpregadoCozinhaActionPerformed
@@ -272,13 +246,13 @@ public class Aplicacao extends javax.swing.JFrame {
     }//GEN-LAST:event_BotaoEmpregadoCozinhaActionPerformed
 
     private void mostrarPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarPasswordActionPerformed
-       if(mostrarPassword.isSelected()){
-            escreverPassword.setEchoChar((char)0);
-        }else{
+        if (mostrarPassword.isSelected()) {
+            escreverPassword.setEchoChar((char) 0);
+        } else {
             escreverPassword.setEchoChar('*');
         }
     }//GEN-LAST:event_mostrarPasswordActionPerformed
-    
+
     public String getUsername() {
         return escreverPassword.getText();
     }
@@ -286,17 +260,11 @@ public class Aplicacao extends javax.swing.JFrame {
     public String getPassword() {
         return escreverPassword.getText();
     }
-    
-   
+
     public static void main(String args[]) {
-        
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                Aplicacao ex = new Aplicacao();
-                
-                
-                
-            }
+
+        java.awt.EventQueue.invokeLater(() -> {
+            new Aplicacao().setVisible(true);
         });
     }
 

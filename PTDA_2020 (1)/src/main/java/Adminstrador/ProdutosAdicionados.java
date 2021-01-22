@@ -5,8 +5,7 @@
  */
 package Adminstrador;
 
-import BD.Produtos;
-import BD.VerDados;
+import BD.*;
 import Design.DesignProdutosAdicionados;
 import Thread.MostrarInterface;
 import Thread.ProgressBar;
@@ -21,13 +20,18 @@ import javax.swing.DefaultListModel;
  */
 public class ProdutosAdicionados extends javax.swing.JFrame {
 
-    DesignProdutosAdicionados design = new DesignProdutosAdicionados(this);
-    Produtos produto = new Produtos();
-    VerDados dados = new VerDados();
-
+    private final DesignProdutosAdicionados design;
+    private final Produtos_Categorias produto;
+    private final VerDados dados;
+    private boolean menu;
     public ProdutosAdicionados() throws ClassNotFoundException, SQLException {
         initComponents();
 
+        this.design = new DesignProdutosAdicionados(this);
+        this.produto = new Produtos_Categorias();
+        this.dados = new VerDados();
+        this.menu = false;
+        
         design.titulo(titulo);
         design.jLabel(categoriasText, produtosText);
         design.BotaoProximo(botaoProximo);
@@ -47,17 +51,19 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
 
         progressBar.setVisible(true);
         listaProdutos.setSelectedIndex(0);
+
     }
 
     /**
-     * Descrição: Coloca na lista de categorias todas categorias que estam na BD 
+     * Descrição: Coloca na lista de categorias todas categorias que estam na BD
+     *
      * @throws ClassNotFoundException
-     * @throws SQLException 
+     * @throws SQLException
      */
     public void listaCategorias() throws ClassNotFoundException, SQLException {
         DefaultListModel dlm = new DefaultListModel();
 
-        String[] categorias = produto.verDados("Categoria").split("\n");
+        String[] categorias = produto.verNome("Categoria").split("\n");
 
         for (String n : categorias) {
             dlm.addElement(n);
@@ -277,8 +283,8 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
             pb.start();
             int id = dados.verID("Categoria", listaCategoria.getSelectedValue());
             String[] produtos = produto.nomeProdutosCategoria(id).split("\n");
-
             listaProdutos(produtos);
+
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ProdutosAdicionados.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -287,8 +293,17 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
     private void botaoAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdicionarActionPerformed
         MostrarInterface mi;
         try {
-            mi = new MostrarInterface(this, new AdicionarProduto());
-            mi.start();
+            AdicionarProduto ap = new AdicionarProduto();
+
+            if (menu) {
+                ap.interfaceMenu();
+                mi = new MostrarInterface(this, ap);
+                mi.start();
+            } else {
+                mi = new MostrarInterface(this, ap);
+                mi.start();
+            }
+
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(ProdutosAdicionados.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -296,9 +311,17 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoAdicionarActionPerformed
 
     private void botaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoProximoActionPerformed
-        MostrarInterface mi;
-        mi = new MostrarInterface(this, new CadastrarEquipa());
-        mi.start();
+        if (menu) {
+            MostrarInterface mi;
+            mi = new MostrarInterface(this, new MenuInicial());
+            mi.start();
+
+        } else {
+            MostrarInterface mi;
+            mi = new MostrarInterface(this, new CadastrarEquipa());
+            mi.start();
+        }
+
         ProgressBar pb = new ProgressBar(progressBar);
         pb.start();
     }//GEN-LAST:event_botaoProximoActionPerformed
@@ -336,7 +359,7 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
 
             String[] dados = produto.dadosCadaProduto(listaProdutos.getSelectedValue()).split("\n");
             AdicionarProduto ap = new AdicionarProduto();
-            
+
             ap.setComboboxCategoria(produto.dadosID(Integer.parseInt(dados[0]), "Categoria"));
             ap.setSpinnerPreco(Double.parseDouble(dados[1]));
             ap.setDescricao(dados[2]);
@@ -344,11 +367,20 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
             ap.setComboboxPersonalizacao(produto.dadosID(Integer.parseInt(dados[4]), "Personalizacao"));
             ap.setSpinnerTempo(Integer.parseInt(dados[5]));
             ap.setEscreverNome(dados[6]);
+            
+            if (menu) {
+                ap.interfaceMenu();
+                mi = new MostrarInterface(this, ap);
+                mi.start();
+            } else {
+                ap.setBotao();
+                mi = new MostrarInterface(this, ap);
+                mi.start();
+            }
 
-            mi = new MostrarInterface(this, ap);
-            mi.start();
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(ProdutosAdicionados.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProdutosAdicionados.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botaoAlterarActionPerformed
 
@@ -362,13 +394,22 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
             mi = new MostrarInterface(this, new AdicionarProduto());
             mi.start();
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(ProdutosAdicionados.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProdutosAdicionados.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
 
         ProgressBar pb = new ProgressBar(progressBar);
         pb.start();
 
     }//GEN-LAST:event_botaoAnteriorActionPerformed
+
+    public void interfaceMenu() {
+
+        botaoAnterior.setVisible(false);
+        botaoProximo.setText("Menu");
+        menu = true;
+
+    }
 
     /**
      * @param args the command line arguments
@@ -387,13 +428,17 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ProdutosAdicionados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProdutosAdicionados.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ProdutosAdicionados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProdutosAdicionados.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ProdutosAdicionados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProdutosAdicionados.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ProdutosAdicionados.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(ProdutosAdicionados.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -402,7 +447,8 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
             try {
                 new ProdutosAdicionados().setVisible(true);
             } catch (ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(ProdutosAdicionados.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ProdutosAdicionados.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         });
     }

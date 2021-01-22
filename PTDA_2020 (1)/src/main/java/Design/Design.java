@@ -29,7 +29,7 @@ public class Design {
      */
     public void textoErro(JLabel nome){
         nome.setFont(new Font("SansSerif", Font.PLAIN, 15));
-        nome.setForeground(Color.RED);
+        nome.setForeground(Color.RED); 
     }
     /**
      * Coloca o titulo das interfaces no centro e com uma fonte pré-definida
@@ -52,7 +52,7 @@ public class Design {
         Dimension size = botao.getPreferredSize();
         frame.setLayout(null);
         
-        botao.setBounds((frame.getSize().width)-(botao.getSize().width*2-20), (frame.getSize().height/2)+150, size.width, size.height);
+        botao.setBounds(700, (frame.getSize().height/2)+150, 110, 34);
          
         Botao(botao);
     }
@@ -61,8 +61,9 @@ public class Design {
          
         Dimension size = botao.getPreferredSize();
         botao.setLayout(null);
-                 
-        botao.setBounds((frame.getSize().width/2)-(botao.getSize().width*3+31), (frame.getSize().height/2)+150, size.width, size.height);
+        
+        
+        botao.setBounds(90, (frame.getSize().height/2)+150, 110, 34);
          
         Botao(botao);
     }
@@ -70,14 +71,14 @@ public class Design {
      public void BotaoAnterior(JButton anterior){
          
          frame.setLayout(null);
-         anterior.setBounds((frame.getSize().width/2)-(anterior.getSize().width*2+10), (frame.getSize().height/2)+150, 110, 34);
+         anterior.setBounds(220, (frame.getSize().height/2)+150, 110, 34);
          
      }
     public void BotaoCentro(JButton botao){
         Dimension size = botao.getPreferredSize();
         frame.setLayout(null);
         
-        botao.setBounds((frame.getSize().width/2)-(botao.getSize().width/3), (frame.getSize().height/2)+150, size.width, size.height);
+        botao.setBounds((frame.getSize().width/2)-(botao.getSize().width/3), (frame.getSize().height/2)+150, 110, 34);
          
         Botao(botao);
     }
@@ -102,6 +103,9 @@ public class Design {
         
         pb.setBounds((frame.getSize().width/2)-(pb.getSize().width/2), (frame.getSize().height/2)+160, larguraPb, alturaPb);
         
+        pb.setStringPainted(true);
+        pb.setValue(0);
+        pb.setString(0 + "%");
     }
 
     public JFrame getJFrame(){

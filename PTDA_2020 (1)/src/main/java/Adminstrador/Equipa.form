@@ -38,7 +38,7 @@
                       <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
                       <Component id="botaoCancelar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="BotaoProximo1" min="-2" max="-2" attributes="0"/>
+                      <Component id="BotaoAnterior" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
                       <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -46,10 +46,12 @@
                       <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
                       <Component id="jTabbedPane1" min="-2" pref="576" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="67" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="botaoAdicionar" max="32767" attributes="0"/>
-                          <Component id="botaoRemover" max="32767" attributes="0"/>
-                          <Component id="botaoAlterar" alignment="1" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="botaoAdicionar" max="32767" attributes="0"/>
+                              <Component id="botaoAlterar" alignment="1" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="botaoRemover" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -72,11 +74,11 @@
                       <Component id="botaoAdicionar" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
                       <Component id="botaoAlterar" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="botaoRemover" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="31" max="32767" attributes="0"/>
+              <EmptySpace pref="26" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="BotaoProximo" min="-2" max="-2" attributes="0"/>
@@ -85,7 +87,7 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="botaoCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="BotaoProximo1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="BotaoAnterior" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
                   </Group>
@@ -112,9 +114,12 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="SansSerif" size="18" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Pr&#xf3;ximo"/>
+        <Property name="text" type="java.lang.String" value="Menu"/>
         <Property name="debugGraphicsOptions" type="int" value="-1"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BotaoProximoActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="botaoCancelar">
       <Properties>
@@ -124,7 +129,7 @@
         <Property name="text" type="java.lang.String" value="Cancelar"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="BotaoProximo1">
+    <Component class="javax.swing.JButton" name="BotaoAnterior">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="SansSerif" size="18" style="0"/>

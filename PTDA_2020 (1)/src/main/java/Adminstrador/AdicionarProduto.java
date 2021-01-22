@@ -27,19 +27,24 @@ import javax.swing.text.PlainDocument;
  */
 public class AdicionarProduto extends javax.swing.JFrame {
 
-    DesignAdicionarProdutos design = new DesignAdicionarProdutos(this);
-
-    Produtos produto = new Produtos();
+    private final DesignAdicionarProdutos design;
+    private final Produtos_Categorias produto;
 
     //popup menu
-    JMenuItem m1;
-    JMenuItem m2;
+    private final JMenuItem m1;
+    private final JMenuItem m2;
 
-    short selecao;
-    int i;
+    private short selecao;
+    private int i;
+    private boolean menu;
 
     public AdicionarProduto() throws ClassNotFoundException, SQLException {
         initComponents();
+
+        this.design = new DesignAdicionarProdutos(this);
+        this.produto = new Produtos_Categorias();
+        this.m1 = new JMenuItem("Categoria");
+        this.m2 = new JMenuItem("Personalizacao");
 
         design.titulo(titulo);
         design.BotaoCancelar(botaoCancelar);
@@ -50,7 +55,7 @@ public class AdicionarProduto extends javax.swing.JFrame {
         design.botaoAdicionarProduto(adicionarCategoria);
         design.comboBox(comboboxCategoria, comboboxPersonalizacao, comboboxIva);
         design.erro(erro);
-        
+
         //limitar a escrita a 40 caracteres e também às bordas do componente
         Border border = BorderFactory.createLineBorder(Color.BLACK);
         escreverDescricao.setBorder(BorderFactory.createCompoundBorder(border,
@@ -65,6 +70,7 @@ public class AdicionarProduto extends javax.swing.JFrame {
 
         //coloca invisivel a label do erro
         erro.setVisible(false);
+
     }
 
     /**
@@ -141,7 +147,6 @@ public class AdicionarProduto extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("AdicionarProduto"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(900, 550));
 
         titulo.setFont(new java.awt.Font("SansSerif", 0, 36)); // NOI18N
         titulo.setText("Adicionar Produto");
@@ -277,9 +282,17 @@ public class AdicionarProduto extends javax.swing.JFrame {
                                             .addComponent(ivaProduto))
                                         .addGap(35, 35, 35))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(erro, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                                        .addComponent(erro, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
                                         .addGap(21, 21, 21)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(titulo)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addGap(76, 76, 76)
+                                                .addComponent(descricaoProduto)))
+                                        .addGap(105, 105, 105))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(comboboxIva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -293,20 +306,7 @@ public class AdicionarProduto extends javax.swing.JFrame {
                                                 .addComponent(comboboxCategoria, 0, 0, Short.MAX_VALUE))
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(catergoriaProduto)
-                                                .addGap(0, 0, Short.MAX_VALUE))))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(titulo)
-                                                    .addGroup(layout.createSequentialGroup()
-                                                        .addGap(76, 76, 76)
-                                                        .addComponent(descricaoProduto)))
-                                                .addGap(105, 105, 105))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addComponent(adicionarCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(8, 8, 8))))))
+                                                .addGap(0, 0, Short.MAX_VALUE))))))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(nomeProduto)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -314,11 +314,15 @@ public class AdicionarProduto extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(personalizacaoProduto)))
                         .addGap(63, 63, 63))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(adicionarCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(78, 78, 78))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(573, 573, 573)
                     .addComponent(comboboxPersonalizacao, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(82, Short.MAX_VALUE)))
+                    .addContainerGap(200, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -365,9 +369,9 @@ public class AdicionarProduto extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(ivaProduto)
                                     .addComponent(comboboxIva, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addGap(2, 2, 2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(adicionarCategoria)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
+                .addGap(117, 117, 117)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botaoCancelar)
                     .addComponent(BotaoProximo))
@@ -376,7 +380,7 @@ public class AdicionarProduto extends javax.swing.JFrame {
                 .addGroup(layout.createSequentialGroup()
                     .addGap(162, 162, 162)
                     .addComponent(comboboxPersonalizacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(327, Short.MAX_VALUE)))
+                    .addContainerGap(349, Short.MAX_VALUE)))
         );
 
         pack();
@@ -387,32 +391,35 @@ public class AdicionarProduto extends javax.swing.JFrame {
     }//GEN-LAST:event_escreverNomeActionPerformed
 
     private void BotaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoProximoActionPerformed
-        
-        if (escreverNome.getText().equals("")) {
-            erro.setVisible(true);
-            erro.setText("Tem adicionar um nome.");
-        } else try {
-            if(!produto.dadoProduto("Produto", escreverNome.getText())){
+        try {
+
+            MostrarInterface mi;
+
+            
+            comboxCategoria();
+            
+            if (escreverNome.getText().equals("")) {
+                erro.setVisible(true);
+                erro.setText("Tem adicionar um nome.");
+            } else if (!produto.nomeRepetido("Produto", escreverNome.getText())) {
                 erro.setVisible(true);
                 erro.setText("Esse nome já existe");
-            }else{
-                try {
-                    produto.adicionarProduto(escreverNome.getText(), (Integer) spinnerTempo.getValue(),
-                            (String) comboboxIva.getSelectedItem(), escreverDescricao.getText(), (double) spinnerPreco.getValue(),
-                            (String) comboboxCategoria.getSelectedItem(), (String) comboboxPersonalizacao.getSelectedItem());
-                } catch (ClassNotFoundException | SQLException ex) {
-                    Logger.getLogger(AdicionarProduto.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
-                MostrarInterface mi;
-                try {
-                    mi = new MostrarInterface(this, new ProdutosAdicionados());
+            } else {
+                produto.adicionarProduto(escreverNome.getText(), (Integer) spinnerTempo.getValue(),
+                        (String) comboboxIva.getSelectedItem(), escreverDescricao.getText(), (double) spinnerPreco.getValue(),
+                        (String) comboboxCategoria.getSelectedItem(), (String) comboboxPersonalizacao.getSelectedItem());
+
+                ProdutosAdicionados ap = new ProdutosAdicionados();
+                if (menu) {
+                    ap.interfaceMenu();
+                    mi = new MostrarInterface(this, ap);
                     mi.start();
-                } catch (ClassNotFoundException | SQLException ex) {
-                    Logger.getLogger(AdicionarProduto.class.getName()).log(Level.SEVERE, null, ex);
+                } else {
+                    mi = new MostrarInterface(this, ap);
+                    mi.start();
                 }
-                
             }
+
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(AdicionarProduto.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -424,7 +431,6 @@ public class AdicionarProduto extends javax.swing.JFrame {
 
     private void adicionarCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarCategoriaActionPerformed
 
-        jPopupMenu1.removeAll();
         jPopupMenu1.add(m1);
         jPopupMenu1.add(m2);
 
@@ -531,41 +537,33 @@ public class AdicionarProduto extends javax.swing.JFrame {
 
     public void comboxCategoria() throws ClassNotFoundException, SQLException {
         Object o = comboboxCategoria.getSelectedItem();
-
         comboboxCategoria.removeAllItems();
-        String nome = produto.verDados("Categoria");
-        String[] categorias = nome.split("\n");
-        for (String n : categorias) {
+        
+        String[] categorias = produto.verNome("Categoria").split("\n");
+        for (String n : categorias) 
             comboboxCategoria.addItem(n);
-        }
         
         comboboxCategoria.setSelectedItem(o);
-
     }
 
     public void comboxPersonalizacao() throws ClassNotFoundException, SQLException {
         Object o = comboboxPersonalizacao.getSelectedItem();
-        
+
         comboboxPersonalizacao.removeAllItems();
-        String nome = produto.verDados("Personalizacao");
-        String[] personalizacao = nome.split("\n");
-        for (String n : personalizacao) {
+        String[] personalizacao = produto.verNome("Personalizacao").split("\n");
+        for (String n : personalizacao)
             comboboxPersonalizacao.addItem(n);
-        }
 
         comboboxPersonalizacao.setSelectedItem(o);
     }
 
     public void setEscreverNome(String escreverNome) {
-            this.escreverNome.setText(escreverNome);
-        
+        this.escreverNome.setText(escreverNome);
     }
-    
+
     public void setDescricao(String descricao) {
-        if((!descricao.equals("null"))){
+        if ((!descricao.equals("null")))
             this.escreverDescricao.append(descricao);
-        }
-        
     }
 
     public void setSpinnerTempo(int tempo) {
@@ -573,34 +571,40 @@ public class AdicionarProduto extends javax.swing.JFrame {
     }
 
     public void setSpinnerPreco(double preco) {
-       
+
         spinnerPreco.setValue(preco);
     }
 
     public void setComboboxCategoria(String categoria) {
         int n = 0;
-        while(!comboboxCategoria.getItemAt(n).equals(categoria)) {
+        while (!comboboxCategoria.getItemAt(n).equals(categoria))
             n++;
-            System.out.println(comboboxCategoria.getItemAt(n));
-            System.out.println(categoria);
-        }
+        
         comboboxCategoria.setSelectedIndex(n);
     }
 
     public void setComboboxPersonalizacao(String personalizacao) {
         int n = 0;
-        while(!comboboxPersonalizacao.getItemAt(n).equals(personalizacao)) {
+        while (!comboboxPersonalizacao.getItemAt(n).equals(personalizacao))
             n++;
-        }
+       
         comboboxPersonalizacao.setSelectedIndex(n);
     }
 
     public void setComboboxIva(Object iva) {
         int n = 0;
-        while(!comboboxIva.getItemAt(n).equals(iva)){
+        while (!comboboxIva.getItemAt(n).equals(iva))
             n++;
-        }
+        
         comboboxIva.setSelectedIndex(n);
+    }
+
+    public void interfaceMenu() {
+        menu = true;
+    }
+
+    public void setBotao() {
+        BotaoProximo.setText("Alterar");
     }
 
     /**

@@ -42,7 +42,7 @@
                   <Component id="adicionarCategoria" min="-2" max="-2" attributes="0"/>
                   <Component id="erro" min="-2" pref="168" max="-2" attributes="0"/>
                   <Component id="removerCategoria" min="-2" max="-2" attributes="0"/>
-                  <Component id="cancelar" min="-2" max="-2" attributes="0"/>
+                  <Component id="botaoCancelar" min="-2" max="-2" attributes="0"/>
               </Group>
           </Group>
       </Group>
@@ -63,7 +63,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="removerCategoria" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="cancelar" min="-2" max="-2" attributes="0"/>
+                      <Component id="botaoCancelar" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jScrollPane1" min="-2" pref="197" max="-2" attributes="0"/>
               </Group>
@@ -141,7 +141,7 @@
         <Property name="text" type="java.lang.String" value="jLabel1"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="cancelar">
+    <Component class="javax.swing.JButton" name="botaoCancelar">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="SansSerif" size="18" style="0"/>
@@ -149,7 +149,7 @@
         <Property name="text" type="java.lang.String" value="Cancelar"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cancelarActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="botaoCancelarActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

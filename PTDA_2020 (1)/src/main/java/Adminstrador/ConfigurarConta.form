@@ -39,7 +39,7 @@
                       <EmptySpace min="-2" pref="124" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="erroPasse" min="-2" pref="469" max="-2" attributes="0"/>
+                      <Component id="erro" min="-2" pref="469" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -84,12 +84,12 @@
                       <Component id="BotaoProximo" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="erroPasse" min="-2" max="-2" attributes="0"/>
+                      <Component id="erro" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="progressBar" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="63" max="32767" attributes="0"/>
+              <EmptySpace pref="133" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -166,7 +166,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="repetirPasseActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JLabel" name="erroPasse">
+    <Component class="javax.swing.JLabel" name="erro">
       <Properties>
         <Property name="text" type="java.lang.String" value="jLabel1"/>
       </Properties>
