@@ -207,15 +207,13 @@ public class Ver_pedidos extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    new Ver_pedidos().setVisible(true);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Ver_pedidos.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {
-                    Logger.getLogger(Ver_pedidos.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                new Ver_pedidos().setVisible(true);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Ver_pedidos.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Ver_pedidos.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }

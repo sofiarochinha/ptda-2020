@@ -227,18 +227,18 @@ public class Menu extends VerDados {
 
         return sb.toString();
     }
-//
-//    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-//        Menu menu = new Menu();
-//
-//        String[] p = menu.nomeMenu().split("\n");
-//        for(String n : p){
-//            System.out.println(n);
-//            int w = menu.verID("GDJHAD", n);
-//            String i = menu.IdProdutosAssociadosAoMenu(w);
-//            String k = menu.produtoAsssociadosAoMenu(i);
-//            System.out.println(k);
-//        }
-//        
-//    }
+
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+        Menu menu = new Menu();
+
+        String[] p = menu.nomeMenu().split("\n");
+        for(String n : p){
+            System.out.println(n);
+            int w = menu.verID("GDJHAD", n);
+            String i = menu.IdProdutosAssociadosAoMenu(w);
+            String k = menu.produtoAsssociadosAoMenu(i);
+            System.out.println(k);
+        }
+        
+    }
 }

@@ -394,8 +394,6 @@ public class AdicionarProduto extends javax.swing.JFrame {
         try {
 
             MostrarInterface mi;
-
-            
             comboxCategoria();
             
             if (escreverNome.getText().equals("")) {
@@ -410,6 +408,7 @@ public class AdicionarProduto extends javax.swing.JFrame {
                         (String) comboboxCategoria.getSelectedItem(), (String) comboboxPersonalizacao.getSelectedItem());
 
                 ProdutosAdicionados ap = new ProdutosAdicionados();
+                
                 if (menu) {
                     ap.interfaceMenu();
                     mi = new MostrarInterface(this, ap);
