@@ -163,7 +163,8 @@ public class pedir_pedido extends javax.swing.JFrame{
     private void btn_confActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_confActionPerformed
             
         double preco = 0;
-            
+        int i = 0;
+        
         try {
             String[] nome = pedido.idProdutos(4).split("\n");
             for(String n : nome){
@@ -172,8 +173,7 @@ public class pedir_pedido extends javax.swing.JFrame{
             }
             
             pedido.inserir_Pedido(preco, 4, idFuncionario);
-            System.out.println(lista_ped.getModel());    
-            
+   
             
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(pedir_pedido.class.getName()).log(Level.SEVERE, null, ex);

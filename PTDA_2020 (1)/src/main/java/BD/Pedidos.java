@@ -83,6 +83,28 @@ public class Pedidos extends VerDados {
        
     }
     
+    public Boolean pedidos_ativos(int mesa) throws ClassNotFoundException, SQLException{
+        StringBuilder sb = new StringBuilder();
+        String query = "select * from Pedido where Estado = true and mesa = ?";
+        boolean variavel =false;
+        PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
+        preparedStmtSelect.setInt(1, mesa);
+        preparedStmtSelect.execute();
+
+        ResultSet rs = preparedStmtSelect.getResultSet();
+
+        while (rs.next()) {
+            sb.append(rs.getString("ID")).append(" ");
+            variavel = true;
+        }
+
+        super.conexao().close();
+        if (variavel == true){
+            return true;
+        }else{
+            return false;
+        }
+    }
     /**
      * Insere um novo pedido na base de dados
      *
