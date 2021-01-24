@@ -22,14 +22,18 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
 
     private final DesignProdutosAdicionados design;
     private final Produtos_Categorias produto;
-    private final VerDados dados;
     private boolean menu;
+    
+    /**
+     * Ve todos produtos adicionados à base de dados consoante as categorias
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     public ProdutosAdicionados() throws ClassNotFoundException, SQLException {
         initComponents();
 
         this.design = new DesignProdutosAdicionados(this);
         this.produto = new Produtos_Categorias();
-        this.dados = new VerDados();
         this.menu = false;
         
         design.titulo(titulo);
@@ -44,13 +48,20 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
         //selecionar um item por default
         listaCategoria.setSelectedIndex(0);
 
-        int id = dados.verID("Categoria", listaCategoria.getSelectedValue());
+        int id = produto.verID("Categoria", listaCategoria.getSelectedValue());
         String[] produtos = produto.nomeProdutosCategoria(id).split("\n");
 
         listaProdutos(produtos);
 
         progressBar.setVisible(true);
         listaProdutos.setSelectedIndex(0);
+        
+        erro.setVisible(false);
+        
+        progressBar.setVisible(true);
+        progressBar.setStringPainted(true);
+        progressBar.setValue(0);
+        progressBar.setString(0 + "%");
 
     }
 
@@ -76,11 +87,10 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
         DefaultListModel dlm = new DefaultListModel();
 
         for (String n : arrayProdutos) {
-            if (n.equals("")) {
+            if (n.equals("")) 
                 dlm.addElement("Nao tem nenhum produto associado.");
-            } else {
+            else 
                 dlm.addElement(n);
-            }
         }
 
         listaProdutos.setModel(dlm);
@@ -266,7 +276,7 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(erro)
                     .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(botaoProximo)
                     .addComponent(botaoAnterior)
@@ -281,8 +291,8 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
         try {
             ProgressBar pb = new ProgressBar(progressBar);
             pb.start();
-            int id = dados.verID("Categoria", listaCategoria.getSelectedValue());
-            String[] produtos = produto.nomeProdutosCategoria(id).split("\n");
+            String[] produtos = produto.nomeProdutosCategoria(
+                    produto.verID("Categoria", listaCategoria.getSelectedValue())).split("\n");
             listaProdutos(produtos);
 
         } catch (ClassNotFoundException | SQLException ex) {
@@ -311,13 +321,13 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
     }//GEN-LAST:event_botaoAdicionarActionPerformed
 
     private void botaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoProximoActionPerformed
+        MostrarInterface mi;
+        
         if (menu) {
-            MostrarInterface mi;
             mi = new MostrarInterface(this, new MenuInicial());
             mi.start();
 
         } else {
-            MostrarInterface mi;
             mi = new MostrarInterface(this, new CadastrarEquipa());
             mi.start();
         }
@@ -333,13 +343,13 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
             pb.start();
 
             //remove o produto do menu e da base de dados
-            int idProduto = dados.verID("Produto", listaProdutos.getSelectedValue());
+            int idProduto = produto.verID("Produto", listaProdutos.getSelectedValue());
 
-            dados.removerDado("Menu_Produto", null, idProduto, "ID_Produto");
-            dados.removerDado("Produto", null, idProduto, "ID");
+            produto.removerDado("Menu_Produto", null, idProduto, "ID_Produto");
+            produto.removerDado("Produto", null, idProduto, "ID");
 
             //atualiza a lista
-            int idCategoria = dados.verID("Categoria", listaCategoria.getSelectedValue());
+            int idCategoria = produto.verID("Categoria", listaCategoria.getSelectedValue());
             String[] produtos = produto.nomeProdutosCategoria(idCategoria).split("\n");
 
             listaProdutos(produtos);
@@ -352,14 +362,12 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
 
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
         MostrarInterface mi;
-
+        
         try {
-            ProgressBar pb = new ProgressBar(progressBar);
-            pb.start();
-
             String[] dados = produto.dadosCadaProduto(listaProdutos.getSelectedValue()).split("\n");
             AdicionarProduto ap = new AdicionarProduto();
-
+            
+            //insere os dados do produto na interface
             ap.setComboboxCategoria(produto.dadosID(Integer.parseInt(dados[0]), "Categoria"));
             ap.setSpinnerPreco(Double.parseDouble(dados[1]));
             ap.setDescricao(dados[2]);
@@ -374,6 +382,7 @@ public class ProdutosAdicionados extends javax.swing.JFrame {
                 mi.start();
             } else {
                 ap.setBotao();
+                ap.setId(produto.verID("Produto", dados[6]));
                 mi = new MostrarInterface(this, ap);
                 mi.start();
             }

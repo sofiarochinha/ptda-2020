@@ -17,6 +17,7 @@ import java.sql.SQLException;
 public class Menu extends VerDados {
 
     private int pedido;
+    private int tempo;
 
     public Menu(int pedido) {
         this.pedido = pedido;
@@ -33,6 +34,11 @@ public class Menu extends VerDados {
         this.pedido = pedido;
     }
 
+    public int getTempo() {
+        return tempo;
+    }
+
+    
     /**
      * Descricao: retorna o nome de todos os Menus
      *
@@ -59,34 +65,28 @@ public class Menu extends VerDados {
     }
 
     /**
-     * Descricao: ve o ID de um determinado Menu
+     * Verifica se existe algum menu com o mesmo nome que o parâmetro nome
      *
-     * @param tabela
      * @param nome
-     * @return int ID
+     * @return true/false
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    @Override
-    public int verID(String tabela, String nome) throws ClassNotFoundException, SQLException {
-        int ID = 0;
+    public boolean verNomeMenuRepetido(String nome) throws ClassNotFoundException, SQLException {
 
-        String query = "select * from Menu where Nome = ?";
+        String query = "select * from Menu";
 
         PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
-        preparedStmtSelect.setString(1, nome);
         preparedStmtSelect.execute();
 
         ResultSet rs = preparedStmtSelect.getResultSet();
 
         while (rs.next()) {
-            ID = rs.getInt("ID");
+            if (nome.equals(rs.getString("Nome"))) {
+                return true;
+            }
         }
-
-        super.conexao().close();
-
-        return ID;
-
+        return false;
     }
 
     /**
@@ -116,11 +116,13 @@ public class Menu extends VerDados {
     }
 
     /**
-     * Descricao: retorna o nome de todos os produtos associados ao id de produto
+     * Descricao: retorna o nome de todos os produtos associados ao id de
+     * produto
+     *
      * @param idProdutos
      * @return
      * @throws SQLException
-     * @throws ClassNotFoundException 
+     * @throws ClassNotFoundException
      */
     public String produtoAsssociadosAoMenu(String idProdutos) throws SQLException, ClassNotFoundException {
 
@@ -143,6 +145,7 @@ public class Menu extends VerDados {
 
             super.conexao().close();
         }
+        System.out.println(produtos.toString());
 
         return produtos.toString();
     }
@@ -157,9 +160,10 @@ public class Menu extends VerDados {
      */
     public String verMenu(int pedido) throws ClassNotFoundException, SQLException {
         StringBuilder sb = new StringBuilder();
-        String query = "select * from Menu_Pedido where ID_Pedido = " + pedido;
+        String query = "select * from Menu_Pedido where ID_Pedido = ? ";
 
         PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
+        preparedStmtSelect.setInt(1, pedido);
         preparedStmtSelect.execute();
 
         ResultSet rs = preparedStmtSelect.getResultSet();
@@ -176,69 +180,125 @@ public class Menu extends VerDados {
     /**
      * Descricao: ve os produtos associados ao menu
      *
+     * @param menu
      * @return
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public String verIDProdutoDoMenu() throws SQLException, ClassNotFoundException {
-        String menu = verMenu(pedido);
-        String[] array = menu.split(" ");
-        StringBuilder sb = new StringBuilder();
-        System.out.println(parseInt(array[0]));
-        for (int i = 0; i < array.length; i++) {
-
-            String query = "select * from Menu_Produto where ID_Menu = " + parseInt(array[i]);
-
-            PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
-            preparedStmtSelect.execute();
-
-            ResultSet rs = preparedStmtSelect.getResultSet();
-
-            while (rs.next()) {
-                sb.append(rs.getString("ID_Produto")).append(" ");
-            }
-        }
-        super.conexao().close();
-
-        return sb.toString();
-    }
-
-    public String verNomeProduto() throws SQLException, ClassNotFoundException {
-        String[] produto = verIDProdutoDoMenu().split(" ");
-
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < produto.length; i++) {
-
-            System.out.println(parseInt(produto[i]));
-            String query = "select * from Produto where ID = " + parseInt(produto[i]);
-
-            PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
-            preparedStmtSelect.execute();
-
-            ResultSet rs = preparedStmtSelect.getResultSet();
-
-            while (rs.next()) {
-                sb.append(rs.getString("Nome")).append(" ");
-            }
-
-        }
-        super.conexao().close();
-
-        return sb.toString();
-    }
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        Menu menu = new Menu();
-
-        String[] p = menu.nomeMenu().split("\n");
-        for(String n : p){
-            System.out.println(n);
-            int w = menu.verID("GDJHAD", n);
-            String i = menu.IdProdutosAssociadosAoMenu(w);
-            String k = menu.produtoAsssociadosAoMenu(i);
-            System.out.println(k);
-        }
+    public String verIDProdutoDoMenu(String menu) throws SQLException, ClassNotFoundException {
         
+        StringBuilder sb = new StringBuilder();
+        System.out.println(menu);
+        if ("".equals(menu)) {
+            return "";
+        } else {
+            String[] array = menu.split(" ");
+
+            for (String idMenu : array) {
+                String query = "select * from Menu_Produto where ID_Menu = ?";
+
+                PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
+                preparedStmtSelect.setInt(1, Integer.parseInt(idMenu));
+                preparedStmtSelect.execute();
+
+                ResultSet rs = preparedStmtSelect.getResultSet();
+
+                while (rs.next()) {
+                    sb.append(rs.getString("ID_Produto")).append(" ");
+                }
+            }
+            super.conexao().close();
+
+        }
+        return sb.toString();
     }
+
+    public String verNomeProduto(String[] produtos) throws SQLException, ClassNotFoundException {
+        StringBuilder sb = new StringBuilder();
+        if (produtos.equals("")) {
+            return "";
+        } else {
+
+            for (String n : produtos) {
+
+                String query = "select * from Produto where ID = ?";
+
+                PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
+                preparedStmtSelect.setInt(1, Integer.parseInt(n));
+                preparedStmtSelect.execute();
+
+                ResultSet rs = preparedStmtSelect.getResultSet();
+
+                while (rs.next()) {
+                    sb.append(rs.getString("Nome")).append("\n");
+                    if(rs.getInt("Tempo") > tempo){
+                        tempo = rs.getInt("Tempo");
+                        System.out.println(tempo);
+                    }
+                }
+
+            }
+            super.conexao().close();
+        }
+
+        return sb.toString();
+    }
+
+    /**
+     * Adiciona um novo menu à base de dados
+     *
+     * @param nome
+     * @param preco
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
+    public void criarNovoMenu(String nome, double preco) throws SQLException, ClassNotFoundException {
+
+        String query = "insert into Menu (Nome, Preco) value (?, ?)";
+
+        PreparedStatement preparedStmtInsert = super.conexao().prepareStatement(query);
+        preparedStmtInsert.setString(1, nome);
+        preparedStmtInsert.setDouble(2, preco);
+        preparedStmtInsert.execute();
+
+        super.conexao().close();
+
+    }
+
+    public void adicionarProdutoAMenu(int idMenu, int idProduto) throws SQLException, ClassNotFoundException {
+
+        String query = "insert into Menu_Produto (ID_Menu, ID_Produto) value (?, ?)";
+
+        PreparedStatement preparedStmtInsert = super.conexao().prepareStatement(query);
+        preparedStmtInsert.setInt(1, idMenu);
+        preparedStmtInsert.setInt(2, idProduto);
+        preparedStmtInsert.execute();
+
+        super.conexao().close();
+
+    }
+    
+   
+
+    /**
+     * Desassocia o menu dos produtos
+     *
+     * @param idMenu
+     * @param idProduto
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
+    public void removerProdutoAMenu(int idMenu, int idProduto) throws SQLException, ClassNotFoundException {
+
+        String query = "delete from Menu_Produto where ID_Menu = ? and ID_Produto = ?";
+
+        PreparedStatement preparedStmtInsert = super.conexao().prepareStatement(query);
+        preparedStmtInsert.setInt(1, idMenu);
+        preparedStmtInsert.setInt(2, idProduto);
+        preparedStmtInsert.execute();
+
+        super.conexao().close();
+
+    }
+
 }

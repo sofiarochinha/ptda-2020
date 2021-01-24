@@ -1,12 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Adminstrador;
 
 import BD.Menu;
+import Design.*;
+import BD.Produtos_Categorias;
+import Thread.MostrarInterface;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -18,6 +17,9 @@ import javax.swing.DefaultListModel;
 public class Menus extends javax.swing.JFrame {
 
     private final Menu menu;
+    private final Produtos_Categorias produtos;
+    private short selecao;
+    private final DesignMenu design;
 
     /**
      * Creates new form Menus
@@ -29,12 +31,30 @@ public class Menus extends javax.swing.JFrame {
         initComponents();
 
         menu = new Menu();
+        this.selecao = 0;
+        this.produtos = new Produtos_Categorias();
+        this.design = new DesignMenu(this);
+
+        design.textoErro(erro);
+        design.titulo(titulo);
+        design.Jlabel(menuText, produtosText);
+        design.JList(listaMenu, jScrollPane1, listaProdutos, jScrollPane2);
+        design.pesquisa(pesquisaMenu, botaoPesquisaMenu, pesquisaProduto, botaoPesquisaProduto);
+        design.jButton(criarNovo, adicionarProduto, removerProduto);
+        design.criarMenu(nomeMenuText, precoMenuText, escreverNomeMenu, escreverPrecoMenu);
+        design.BotaoProximo(botaoMenu);
 
         menusLista();
 
         listaMenu.setSelectedIndex(0);
         listaProdutos();
 
+        escreverNomeMenu.setVisible(false);
+        escreverPrecoMenu.setVisible(false);
+        precoMenuText.setVisible(false);
+        nomeMenuText.setVisible(false);
+
+        erro.setVisible(false);
     }
 
     /**
@@ -67,13 +87,18 @@ public class Menus extends javax.swing.JFrame {
         DefaultListModel dlm = new DefaultListModel();
 
         String menuNome = listaMenu.getSelectedValue();
+        String idProdutos = menu.IdProdutosAssociadosAoMenu(menu.verID("Menu", menuNome));
 
-        int id = menu.verID("dADS", menuNome);
-        String idProdutos = menu.IdProdutosAssociadosAoMenu(id);
-        String[] produtos = menu.produtoAsssociadosAoMenu(idProdutos).split("\n");
+        if (idProdutos.trim().equals("")) {
+            dlm.addElement("Nao tem nenhum produto associado.");
+        } else {
+            String[] produtos = menu.produtoAsssociadosAoMenu(idProdutos).split("\n");
 
-        for (String n : produtos) {
-            dlm.addElement(n);
+            for (String n : produtos) {
+
+                dlm.addElement(n);
+            }
+
         }
 
         listaProdutos.setModel(dlm);
@@ -94,15 +119,21 @@ public class Menus extends javax.swing.JFrame {
         listaMenu = new javax.swing.JList<>();
         jScrollPane2 = new javax.swing.JScrollPane();
         listaProdutos = new javax.swing.JList<>();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        menuText = new javax.swing.JLabel();
+        produtosText = new javax.swing.JLabel();
         pesquisaMenu = new javax.swing.JTextField();
         pesquisaProduto = new javax.swing.JTextField();
         adicionarProduto = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        botaoPesquisa = new javax.swing.JButton();
+        removerProduto = new javax.swing.JButton();
+        criarNovo = new javax.swing.JButton();
+        botaoPesquisaProduto = new javax.swing.JButton();
+        botaoPesquisaMenu = new javax.swing.JButton();
+        escreverNomeMenu = new javax.swing.JTextField();
+        erro = new javax.swing.JLabel();
+        nomeMenuText = new javax.swing.JLabel();
+        precoMenuText = new javax.swing.JLabel();
+        escreverPrecoMenu = new javax.swing.JSpinner();
+        botaoMenu = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -128,13 +159,18 @@ public class Menus extends javax.swing.JFrame {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        listaProdutos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listaProdutosMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(listaProdutos);
 
-        jLabel2.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        jLabel2.setText("Menus");
+        menuText.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        menuText.setText("Menus");
 
-        jLabel3.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        jLabel3.setText("Produtos");
+        produtosText.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        produtosText.setText("Produtos");
 
         pesquisaMenu.setFont(new java.awt.Font("SansSerif", 0, 15)); // NOI18N
         pesquisaMenu.setText("Pesquisa");
@@ -160,18 +196,48 @@ public class Menus extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        jButton2.setText("Remover");
-
-        jButton3.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        jButton3.setText("Criar novo");
-
-        jButton4.setText("✔");
-
-        botaoPesquisa.setText("✔");
-        botaoPesquisa.addActionListener(new java.awt.event.ActionListener() {
+        removerProduto.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        removerProduto.setText("Remover");
+        removerProduto.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                botaoPesquisaActionPerformed(evt);
+                removerProdutoActionPerformed(evt);
+            }
+        });
+
+        criarNovo.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        criarNovo.setText("Criar");
+        criarNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                criarNovoActionPerformed(evt);
+            }
+        });
+
+        botaoPesquisaProduto.setText("✔");
+
+        botaoPesquisaMenu.setText("✔");
+        botaoPesquisaMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoPesquisaMenuActionPerformed(evt);
+            }
+        });
+
+        escreverNomeMenu.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+
+        erro.setText("jLabel1");
+
+        nomeMenuText.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        nomeMenuText.setText("Nome:");
+
+        precoMenuText.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        precoMenuText.setText("Preco");
+
+        escreverPrecoMenu.setFont(new java.awt.Font("Ubuntu", 0, 18)); // NOI18N
+        escreverPrecoMenu.setModel(new javax.swing.SpinnerNumberModel(0.01d, 0.01d, null, 0.1d));
+
+        botaoMenu.setText("Menu");
+        botaoMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoMenuActionPerformed(evt);
             }
         });
 
@@ -180,41 +246,47 @@ public class Menus extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(106, 106, 106)
+                .addGap(158, 158, 158)
+                .addComponent(menuText)
+                .addGap(104, 104, 104)
+                .addComponent(erro)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(produtosText)
+                .addGap(246, 246, 246))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(pesquisaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(botaoPesquisa)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(90, 90, 90)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGap(106, 106, 106)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(pesquisaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(botaoPesquisaMenu)))
+                        .addGap(78, 78, 78)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(removerProduto)
+                            .addComponent(escreverNomeMenu)
                             .addComponent(adicionarProduto)
-                            .addComponent(jButton2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3)
-                        .addGap(76, 76, 76)))
+                            .addComponent(criarNovo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(nomeMenuText)
+                            .addComponent(precoMenuText)
+                            .addComponent(escreverPrecoMenu)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(357, 357, 357)
+                        .addComponent(titulo)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(pesquisaProduto, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)))
+                        .addComponent(botaoPesquisaProduto)))
                 .addGap(185, 185, 185))
             .addGroup(layout.createSequentialGroup()
-                .addGap(357, 357, 357)
-                .addComponent(titulo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(158, 158, 158)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addGap(246, 246, 246))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(botaoMenu)
+                .addGap(39, 39, 39))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -224,33 +296,43 @@ public class Menus extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(19, 19, 19)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(produtosText, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(menuText)
+                                .addComponent(erro)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(pesquisaMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(botaoPesquisa))
+                            .addComponent(botaoPesquisaMenu)
+                            .addComponent(criarNovo))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(61, 61, 61)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(pesquisaProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jButton3))
-                            .addComponent(jButton4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(3, 3, 3)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(69, 69, 69)
-                                .addComponent(adicionarProduto)
-                                .addGap(57, 57, 57)
-                                .addComponent(jButton2)))))
-                .addGap(0, 96, Short.MAX_VALUE))
+                            .addComponent(pesquisaProduto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(botaoPesquisaProduto))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(95, 95, 95)
+                        .addComponent(nomeMenuText)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(escreverNomeMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(precoMenuText)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(escreverPrecoMenu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(adicionarProduto)
+                        .addGap(18, 18, 18)
+                        .addComponent(removerProduto)
+                        .addGap(42, 42, 42)))
+                .addGap(41, 41, 41)
+                .addComponent(botaoMenu)
+                .addGap(27, 27, 27))
         );
 
         pack();
@@ -266,6 +348,7 @@ public class Menus extends javax.swing.JFrame {
             pesquisaProduto.setText("Pesquisa");
 
             listaProdutos();
+            erro.setVisible(false);
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Menus.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -278,27 +361,22 @@ public class Menus extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_pesquisaProdutoActionPerformed
 
-    private void botaoPesquisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPesquisaActionPerformed
+    private void botaoPesquisaMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoPesquisaMenuActionPerformed
 
         String pesquisa = pesquisaMenu.getText();
-
         DefaultListModel dlmMenu = new DefaultListModel();
-
         DefaultListModel dlmProdutos = new DefaultListModel();
+
         try {
-
             String[] menus = menu.nomeMenu().split("\n");
-
             for (String n : menus) {
-
                 if (n.toLowerCase().contains(pesquisa.toLowerCase())) {
                     dlmMenu.addElement(n);
                 }
                 listaMenu.setSelectedIndex(0);
             }
 
-             listaMenu.setModel(dlmMenu);
-             
+            listaMenu.setModel(dlmMenu);
             if (listaMenu.getModel().getSize() == 0) {
                 dlmMenu.addElement("Nada encontrado");
                 listaMenu.setModel(dlmMenu);
@@ -311,11 +389,149 @@ public class Menus extends javax.swing.JFrame {
         }
 
 
-    }//GEN-LAST:event_botaoPesquisaActionPerformed
+    }//GEN-LAST:event_botaoPesquisaMenuActionPerformed
 
     private void adicionarProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_adicionarProdutoActionPerformed
-        
+        selecao++;
+
+        String nomeMenu = listaMenu.getSelectedValue();
+        if (listaProdutos.isSelectionEmpty()) {
+            erro.setVisible(true);
+            erro.setText(("Tem de selecionar um produto"));
+            selecao = 1;
+        } else {
+            try {
+                switch (selecao) {
+                    case 1:
+                        listaTodosProdutos();
+                        listaMenu.setSelectedIndex(0);
+                        erro.setVisible(false);
+                        break;
+
+                    case 2:
+                        int idMenu = menu.verID("Menu", nomeMenu);
+                        String produto = listaProdutos.getSelectedValue();
+                        int idProduto = produtos.verID("Produto", produto);
+
+                        menu.adicionarProdutoAMenu(idMenu, idProduto);
+
+                        listaProdutos();
+                        menusLista();
+                        selecao = 0;
+                        erro.setVisible(false);
+                        break;
+                }
+
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Menus.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLIntegrityConstraintViolationException ex) {
+                erro.setVisible(true);
+                erro.setText("Já existe esse produto no menu");
+            } catch (SQLException ex) {
+                Logger.getLogger(Menus.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+
     }//GEN-LAST:event_adicionarProdutoActionPerformed
+
+    public void listaTodosProdutos() throws ClassNotFoundException, SQLException {
+        DefaultListModel dlm = new DefaultListModel();
+
+        String[] produto = produtos.verNome("Produto").split("\n");
+
+        for (String n : produto) {
+            dlm.addElement(n);
+        }
+
+        listaProdutos.setModel(dlm);
+
+    }
+
+
+    private void criarNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_criarNovoActionPerformed
+
+        escreverNomeMenu.setVisible(true);
+        escreverPrecoMenu.setVisible(true);
+        precoMenuText.setVisible(true);
+        nomeMenuText.setVisible(true);
+        adicionarProduto.setVisible(false);
+        removerProduto.setVisible(false);
+
+        criarNovo.setText("OK");
+
+        selecao++;
+        System.out.println(selecao);
+
+        if (selecao == 2) {
+            String nome = escreverNomeMenu.getText();
+            try {
+                if ("".equals(escreverNomeMenu.getText())) {
+                    erro.setVisible(true);
+                    erro.setText("Tem de adicionar um nome");
+                    selecao = 1;
+                } else if (!menu.verNomeMenuRepetido(nome)) {
+                    menu.criarNovoMenu(nome, (Double) escreverPrecoMenu.getValue());
+                    menusLista();
+                    criarNovo.setText("Criar");
+
+                    adicionarProduto.setVisible(true);
+                    removerProduto.setVisible(true);
+                    erro.setVisible(false);
+                    escreverNomeMenu.setVisible(false);
+                    escreverPrecoMenu.setVisible(false);
+                    precoMenuText.setVisible(false);
+                    nomeMenuText.setVisible(false);
+
+                    selecao = 0;
+                } else {
+                    erro.setVisible(true);
+                    erro.setText("Esse nome já existe");
+                    selecao = 1;
+                }
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(Menus.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+
+    }//GEN-LAST:event_criarNovoActionPerformed
+
+    private void removerProdutoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerProdutoActionPerformed
+        String nomeMenu = listaMenu.getSelectedValue();
+        String nomeProduto = listaProdutos.getSelectedValue();
+
+        if (listaProdutos.isSelectionEmpty()) {
+            erro.setVisible(true);
+            erro.setText("Tem de selecionar um produto");
+        } else {
+            try {
+                int idMenu = menu.verID("Menu", nomeMenu);
+                int idProduto = menu.verID("Produto", nomeProduto);
+
+                menu.removerProdutoAMenu(idMenu, idProduto);
+                listaProdutos();
+
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(Menus.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
+
+    }//GEN-LAST:event_removerProdutoActionPerformed
+
+    private void listaProdutosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaProdutosMouseClicked
+        erro.setVisible(false);
+    }//GEN-LAST:event_listaProdutosMouseClicked
+
+    private void botaoMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoMenuActionPerformed
+        MostrarInterface mi = new MostrarInterface(this, new MenuInicial());
+
+        mi.start();
+
+
+    }//GEN-LAST:event_botaoMenuActionPerformed
 
     /**
      * @param args the command line arguments
@@ -356,18 +572,24 @@ public class Menus extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton adicionarProduto;
-    private javax.swing.JButton botaoPesquisa;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JButton botaoMenu;
+    private javax.swing.JButton botaoPesquisaMenu;
+    private javax.swing.JButton botaoPesquisaProduto;
+    private javax.swing.JButton criarNovo;
+    private javax.swing.JLabel erro;
+    private javax.swing.JTextField escreverNomeMenu;
+    private javax.swing.JSpinner escreverPrecoMenu;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList<String> listaMenu;
     private javax.swing.JList<String> listaProdutos;
+    private javax.swing.JLabel menuText;
+    private javax.swing.JLabel nomeMenuText;
     private javax.swing.JTextField pesquisaMenu;
     private javax.swing.JTextField pesquisaProduto;
+    private javax.swing.JLabel precoMenuText;
+    private javax.swing.JLabel produtosText;
+    private javax.swing.JButton removerProduto;
     private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
 }

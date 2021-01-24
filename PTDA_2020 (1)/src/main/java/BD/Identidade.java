@@ -15,9 +15,11 @@ public class Identidade extends VerDados {
      */
     public boolean verPassword(String tipoFuncionario, String nome, String pass) throws ClassNotFoundException, SQLException {
 
-        String query = "select * from Funcionario where Funcao like" + tipoFuncionario;
-
+        String query = "select * from Funcionario where Funcao like ? and Situacao like ?";
+        
         PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
+        preparedStmtSelect.setString(1, tipoFuncionario);
+        preparedStmtSelect.setString(2, "Ativo");
         preparedStmtSelect.execute();
 
         ResultSet rs = preparedStmtSelect.getResultSet();
@@ -39,23 +41,22 @@ public class Identidade extends VerDados {
      *
      * @param nomeUtilizador
      * @param Funcao
-     * @return
+     * @return true/false
      * @throws ClassNotFoundException
      * @throws SQLException
      */
     public boolean verNomeUtilizadorRepetido(String nomeUtilizador, String Funcao) throws ClassNotFoundException, SQLException {
 
-        String query = "select * from Funcionario where Funcao like " + Funcao;
+        String query = "select * from Funcionario where Funcao like ?";
 
         PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
+        preparedStmtSelect.setString(1, Funcao);
         preparedStmtSelect.execute();
-
         ResultSet rs = preparedStmtSelect.getResultSet();
+        
         while (rs.next()) {
-            if (nomeUtilizador.equals(rs.getString("Nome_Utilizador"))) {
+            if (nomeUtilizador.equals(rs.getString("Nome_Utilizador")))
                 return true;
-            }
-
         }
 
         super.conexao().close();
@@ -91,7 +92,16 @@ public class Identidade extends VerDados {
         super.conexao().close();
     }
 
-    
+    /**
+     * Altera os dados de um funcionario
+     * @param ID
+     * @param nome
+     * @param nomeUtilizador
+     * @param palavraPasse
+     * @param Funcao
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     public void updateFuncionario(int ID, String nome, String nomeUtilizador, String palavraPasse, String Funcao) throws ClassNotFoundException, SQLException {
 
         String query = "update Funcionario set Nome = ?, Nome_Utilizador = ?, Palavra_Passe = ?, Funcao = ? where ID like ?";
@@ -119,6 +129,7 @@ public class Identidade extends VerDados {
 
         super.conexao().close();
     }
+    
     /**
      * Descricao: Adiciona um novo funcionario à BD
      *
@@ -164,9 +175,9 @@ public class Identidade extends VerDados {
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public String verFuncionario(String Funcao) throws ClassNotFoundException, SQLException {
+    public String verFuncionarioAtivo(String Funcao) throws ClassNotFoundException, SQLException {
         StringBuilder funcionarios = new StringBuilder();
-        String query = "select * from Funcionario where Funcao like ?";
+        String query = "select * from Funcionario where Funcao like ? and Situacao like 'Ativo'";
 
         PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
         preparedStmtSelect.setString(1, Funcao);
@@ -184,26 +195,69 @@ public class Identidade extends VerDados {
     }
 
     /**
-     * Descricao: 
-     * @param nomeUtilizador
+     * Retorna os funcionarios que não estam ativos
+     * @return funcionarios.toString()
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
+    public String verFuncionarioNaoAtivo() throws ClassNotFoundException, SQLException {
+        StringBuilder funcionarios = new StringBuilder();
+        String query = "select * from Funcionario where Situacao like 'Não ativo'";
+
+        PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
+       
+        preparedStmtSelect.execute();
+
+        ResultSet rs = preparedStmtSelect.getResultSet();
+        while (rs.next()) {
+            funcionarios.append(rs.getString("Nome_Utilizador")).append("\n");
+
+        }
+        super.conexao().close();
+
+        return funcionarios.toString();
+    }
+
+    /**
+     * Descricao: desativa uma conta da base de dados
+     * @param nome
      * @param Funcao
      * @throws ClassNotFoundException
      * @throws SQLException 
      */
     public void removerFuncionario(String nome, String Funcao) throws ClassNotFoundException, SQLException {
 
-        PreparedStatement preparedStmtDelete = null;
+        String query = "update Funcionario set Situacao = ? where Nome like ? and Funcao like ?";
 
-        String query = "delete from Funcionario where Nome like ? and Funcao like ?";
-
-        preparedStmtDelete = super.conexao().prepareStatement(query);
-        preparedStmtDelete.setString(1, nome);
-        preparedStmtDelete.setString(2, Funcao);
-          System.out.println( preparedStmtDelete.execute());
+        PreparedStatement preparedStmtDelete = super.conexao().prepareStatement(query);
+        preparedStmtDelete.setString(1, "Não ativo");
+        preparedStmtDelete.setString(2, nome);
+        preparedStmtDelete.setString(3, Funcao);
        
-
+        preparedStmtDelete.execute();
+        
         super.conexao().close();
     }
+    
+    /**
+     * Descricao: ativa uma conta da base de dados
+     * @param nomeUtilizador
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
+    public void ativarFuncionario(String nomeUtilizador) throws ClassNotFoundException, SQLException {
+
+        String query = "update Funcionario set Situacao = ? where Nome_Utilizador like ?";
+
+        PreparedStatement preparedStmtUpdate = super.conexao().prepareStatement(query);
+        preparedStmtUpdate.setString(1, "Ativo");
+        preparedStmtUpdate.setString(2, nomeUtilizador);
+       
+        preparedStmtUpdate.execute();
+        
+        super.conexao().close();
+    }
+    
     /**
      * Descricao: retorna todos os dados do funcionario
      * @param nome

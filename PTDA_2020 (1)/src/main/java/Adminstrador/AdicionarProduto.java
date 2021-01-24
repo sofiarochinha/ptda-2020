@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Adminstrador;
 
 import Design.*;
@@ -35,8 +30,8 @@ public class AdicionarProduto extends javax.swing.JFrame {
     private final JMenuItem m2;
 
     private short selecao;
-    private int i;
-    private boolean menu;
+    private int id;
+    private boolean menu, adicionar = true;
 
     public AdicionarProduto() throws ClassNotFoundException, SQLException {
         initComponents();
@@ -395,28 +390,35 @@ public class AdicionarProduto extends javax.swing.JFrame {
 
             MostrarInterface mi;
             comboxCategoria();
-            
+
             if (escreverNome.getText().equals("")) {
                 erro.setVisible(true);
                 erro.setText("Tem adicionar um nome.");
-            } else if (!produto.nomeRepetido("Produto", escreverNome.getText())) {
+            } else if (!produto.nomeRepetido("Produto", escreverNome.getText()) && adicionar) {
                 erro.setVisible(true);
                 erro.setText("Esse nome já existe");
-            } else {
+            } else if (adicionar) {
                 produto.adicionarProduto(escreverNome.getText(), (Integer) spinnerTempo.getValue(),
                         (String) comboboxIva.getSelectedItem(), escreverDescricao.getText(), (double) spinnerPreco.getValue(),
                         (String) comboboxCategoria.getSelectedItem(), (String) comboboxPersonalizacao.getSelectedItem());
 
-                ProdutosAdicionados ap = new ProdutosAdicionados();
-                
-                if (menu) {
-                    ap.interfaceMenu();
-                    mi = new MostrarInterface(this, ap);
-                    mi.start();
-                } else {
-                    mi = new MostrarInterface(this, ap);
-                    mi.start();
-                }
+            } else {
+                System.out.println(id);
+                System.out.println(escreverNome.getText());
+                produto.updateProduto(id, escreverNome.getText(), (String) comboboxCategoria.getSelectedItem(),
+                        (double) spinnerPreco.getValue(), escreverDescricao.getText(), (String) comboboxIva.getSelectedItem(),
+                        (String) comboboxPersonalizacao.getSelectedItem(), (Integer) spinnerTempo.getValue());
+            }
+
+            ProdutosAdicionados ap = new ProdutosAdicionados();
+
+            if (menu) {
+                ap.interfaceMenu();
+                mi = new MostrarInterface(this, ap);
+                mi.start();
+            } else {
+                mi = new MostrarInterface(this, ap);
+                mi.start();
             }
 
         } catch (ClassNotFoundException | SQLException ex) {
@@ -537,11 +539,12 @@ public class AdicionarProduto extends javax.swing.JFrame {
     public void comboxCategoria() throws ClassNotFoundException, SQLException {
         Object o = comboboxCategoria.getSelectedItem();
         comboboxCategoria.removeAllItems();
-        
+
         String[] categorias = produto.verNome("Categoria").split("\n");
-        for (String n : categorias) 
+        for (String n : categorias) {
             comboboxCategoria.addItem(n);
-        
+        }
+
         comboboxCategoria.setSelectedItem(o);
     }
 
@@ -550,8 +553,9 @@ public class AdicionarProduto extends javax.swing.JFrame {
 
         comboboxPersonalizacao.removeAllItems();
         String[] personalizacao = produto.verNome("Personalizacao").split("\n");
-        for (String n : personalizacao)
+        for (String n : personalizacao) {
             comboboxPersonalizacao.addItem(n);
+        }
 
         comboboxPersonalizacao.setSelectedItem(o);
     }
@@ -561,8 +565,9 @@ public class AdicionarProduto extends javax.swing.JFrame {
     }
 
     public void setDescricao(String descricao) {
-        if ((!descricao.equals("null")))
+        if ((!descricao.equals("null"))) {
             this.escreverDescricao.append(descricao);
+        }
     }
 
     public void setSpinnerTempo(int tempo) {
@@ -576,25 +581,28 @@ public class AdicionarProduto extends javax.swing.JFrame {
 
     public void setComboboxCategoria(String categoria) {
         int n = 0;
-        while (!comboboxCategoria.getItemAt(n).equals(categoria))
+        while (!comboboxCategoria.getItemAt(n).equals(categoria)) {
             n++;
-        
+        }
+
         comboboxCategoria.setSelectedIndex(n);
     }
 
     public void setComboboxPersonalizacao(String personalizacao) {
         int n = 0;
-        while (!comboboxPersonalizacao.getItemAt(n).equals(personalizacao))
+        while (!comboboxPersonalizacao.getItemAt(n).equals(personalizacao)) {
             n++;
-       
+        }
+
         comboboxPersonalizacao.setSelectedIndex(n);
     }
 
     public void setComboboxIva(Object iva) {
         int n = 0;
-        while (!comboboxIva.getItemAt(n).equals(iva))
+        while (!comboboxIva.getItemAt(n).equals(iva)) {
             n++;
-        
+        }
+
         comboboxIva.setSelectedIndex(n);
     }
 
@@ -604,7 +612,13 @@ public class AdicionarProduto extends javax.swing.JFrame {
 
     public void setBotao() {
         BotaoProximo.setText("Alterar");
+        adicionar = false;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
 
     /**
      * @param args the command line arguments

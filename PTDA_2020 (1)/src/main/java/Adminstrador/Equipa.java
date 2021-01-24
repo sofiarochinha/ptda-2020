@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 
 /**
+ * O admin pode ver a equipa toda
  *
  * @author sofia
  */
@@ -22,6 +23,7 @@ public class Equipa extends javax.swing.JFrame {
     private final Identidade identidade;
     private final DesignEquipa design;
     private final VerDados dados;
+    private MostrarInterface mostrarInterface;
 
     private String funcao;
     private int selecionado;
@@ -29,6 +31,7 @@ public class Equipa extends javax.swing.JFrame {
 
     /**
      * Creates new form Equipa
+     *
      * @throws java.lang.ClassNotFoundException
      * @throws java.sql.SQLException
      */
@@ -40,23 +43,21 @@ public class Equipa extends javax.swing.JFrame {
         this.design = new DesignEquipa(this);
         this.funcao = null;
         this.dados = new VerDados();
-        this.menu = false;
 
         listas();
         design.titulo(titulo);
-        design.progressBar(progressBar);
+        design.progressBar(progressbar);
         design.BotaoAnterior(BotaoAnterior);
         design.BotaoProximo(BotaoProximo);
         design.BotaoCancelar(botaoCancelar);
         design.JButton(botaoAdicionar, botaoAlterar, botaoRemover);
         design.menuTab(jTabbedPane1);
-        
-        
+
     }
 
     /**
-     * Descricao: coloca na lista da tab "Adminstrador" todos os nomes que tem
-     * associado a funcao "Admin"
+     * Descricao: coloca nas listas da tabs todos os funcionarios
+     * correspondentes
      *
      * @throws ClassNotFoundException
      * @throws SQLException
@@ -65,36 +66,46 @@ public class Equipa extends javax.swing.JFrame {
 
         DefaultListModel dlm = new DefaultListModel();
 
-        switch (selecionado) {
-            case 0:
-                funcao = "Admin";
-                break;
-            case 1:
-                funcao = "Mesa";
-                break;
-            case 2:
-                funcao = "Cozinha";
-                break;
+        if (selecionado == 3) {
+            String[] funcionariosNaoAtivos = identidade.verFuncionarioNaoAtivo().split("\n");
+            for (String n : funcionariosNaoAtivos) {
+                dlm.addElement(n);
+            }
+            listaNaoAtivo.setModel(dlm);
+
+        } else {
+
+            switch (selecionado) {
+                case 0:
+                    funcao = "Admin";
+                    break;
+                case 1:
+                    funcao = "Mesa";
+                    break;
+                case 2:
+                    funcao = "Cozinha";
+                    break;
+            }
+
+            String[] funcionariosAtivos = identidade.verFuncionarioAtivo(funcao).split("\n");
+
+            for (String n : funcionariosAtivos) {
+                dlm.addElement(n);
+            }
+
+            switch (selecionado) {
+                case 0:
+                    listaAdmin.setModel(dlm);
+                    break;
+                case 1:
+                    listaMesa.setModel(dlm);
+                    break;
+                case 2:
+                    listaCozinha.setModel(dlm);
+                    break;
+
+            }
         }
-
-        String[] funcionarios = identidade.verFuncionario(funcao).split("\n");
-
-        for (String n : funcionarios) {
-            dlm.addElement(n);
-        }
-
-        switch (selecionado) {
-            case 0:
-                listaAdmin.setModel(dlm);
-                break;
-            case 1:
-                listaMesa.setModel(dlm);
-                break;
-            case 2:
-                listaCozinha.setModel(dlm);
-                break;
-        }
-
     }
 
     /**
@@ -117,7 +128,9 @@ public class Equipa extends javax.swing.JFrame {
         listaMesa = new javax.swing.JList<>();
         jScrollPane3 = new javax.swing.JScrollPane();
         listaCozinha = new javax.swing.JList<>();
-        progressBar = new javax.swing.JProgressBar();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        listaNaoAtivo = new javax.swing.JList<>();
+        progressbar = new javax.swing.JProgressBar();
         botaoAdicionar = new javax.swing.JButton();
         botaoAlterar = new javax.swing.JButton();
         botaoRemover = new javax.swing.JButton();
@@ -160,6 +173,10 @@ public class Equipa extends javax.swing.JFrame {
         jScrollPane3.setViewportView(listaCozinha);
 
         jTabbedPane1.addTab("Empregado de Cozinha", jScrollPane3);
+
+        jScrollPane4.setViewportView(listaNaoAtivo);
+
+        jTabbedPane1.addTab("Não ativo", jScrollPane4);
 
         botaoAdicionar.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         botaoAdicionar.setText("Adicionar");
@@ -204,7 +221,7 @@ public class Equipa extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(BotaoAnterior)
                         .addGap(84, 84, 84)
-                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(progressbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(61, 61, 61)
                         .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 576, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -243,36 +260,37 @@ public class Equipa extends javax.swing.JFrame {
                             .addComponent(BotaoAnterior))
                         .addGap(39, 39, 39))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(progressbar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap())))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
-        selecionado = jTabbedPane1.getSelectedIndex();
-        try {
-
-            listas();
-        } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(Equipa.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_jTabbedPane1MouseClicked
-
     /**
-     * Descricao: Adiciona um novo produto
+     * Descricao: Adiciona um novo funcionario
      *
      * @param evt
      */
     private void botaoAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAdicionarActionPerformed
-        MostrarInterface mi;
-        mi = new MostrarInterface(this, new CadastrarEquipa());
-        mi.start();
-        ProgressBar pb = new ProgressBar(progressBar);
+        CadastrarEquipa equipa = new CadastrarEquipa();
+        ProgressBar pb = new ProgressBar(progressbar);
+
+        if (menu) {
+            equipa.interfaceMenu();
+        }
+        mostrarInterface = new MostrarInterface(this, equipa);
+        mostrarInterface.start();
         pb.start();
+
+
     }//GEN-LAST:event_botaoAdicionarActionPerformed
 
+    /**
+     * Remove um funcionario
+     *
+     * @param evt
+     */
     private void botaoRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoRemoverActionPerformed
 
         try {
@@ -302,39 +320,50 @@ public class Equipa extends javax.swing.JFrame {
      * @param evt
      */
     private void botaoAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoAlterarActionPerformed
+
         String nome = null;
         CadastrarEquipa equipa = new CadastrarEquipa();
 
-        switch (selecionado) {
-            case 0:
-                funcao = "Administrador";
-                nome = listaAdmin.getSelectedValue();
-                break;
-            case 1:
-                funcao = "Empregado de cozinha";
-                nome = listaMesa.getSelectedValue();
-                break;
-            case 2:
-                funcao = "Empregado de mesa";
-                nome = listaCozinha.getSelectedValue();
-                break;
-        }
         try {
-            String dados[] = identidade.dadosCadaFuncionario(nome).split("\n");
-            equipa.setComboboxTipoFuncionario(funcao);
-            equipa.setNomeFuncionario(dados[2]); // insere o nome do funcionario
-            equipa.setUsernameFuncionario(dados[0]); //insere o nome de utilizador
-            equipa.setPassword(dados[1]); // insere a password
-            equipa.setRepetirPassword(dados[1]);
-            equipa.setUpdate(true);
-            equipa.setID(this.dados.verID("Funcionario", nome));
+            if (selecionado == 3) {
+                botaoAlterar.setText("Ativar");
+                identidade.ativarFuncionario(listaNaoAtivo.getSelectedValue());
+                listas();
+            } else {
 
-            MostrarInterface mi;
-            mi = new MostrarInterface(this, equipa);
-            mi.start();
-            ProgressBar pb = new ProgressBar(progressBar);
-            pb.start();
+                switch (selecionado) {
+                    case 0:
+                        funcao = "Administrador";
+                        nome = listaAdmin.getSelectedValue();
+                        break;
+                    case 1:
+                        funcao = "Empregado de cozinha";
+                        nome = listaMesa.getSelectedValue();
+                        break;
+                    case 2:
+                        funcao = "Empregado de mesa";
+                        nome = listaCozinha.getSelectedValue();
+                        break;
+                }
 
+                String dados[] = identidade.dadosCadaFuncionario(nome).split("\n");
+                equipa.setComboboxTipoFuncionario(funcao);
+                equipa.setNomeFuncionario(dados[2]); // insere o nome do funcionario
+                equipa.setUsernameFuncionario(dados[0]); //insere o nome de utilizador
+                equipa.setPassword(dados[1]); // insere a password
+                equipa.setRepetirPassword(dados[1]);
+                equipa.setUpdate(true);
+                equipa.setID(this.dados.verID("Funcionario", nome));
+
+                if (menu) {
+                    equipa.interfaceMenu();
+                }
+                mostrarInterface = new MostrarInterface(this, equipa);
+                mostrarInterface.start();
+                ProgressBar pb = new ProgressBar(progressbar);
+                pb.start();
+
+            }
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Equipa.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -342,13 +371,42 @@ public class Equipa extends javax.swing.JFrame {
 
     }//GEN-LAST:event_botaoAlterarActionPerformed
 
+    /**
+     * Mostra o menu
+     *
+     * @param evt
+     */
     private void BotaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoProximoActionPerformed
-        MostrarInterface mi = new MostrarInterface(this, new MenuInicial());
-        mi.start();
-        ProgressBar pb = new ProgressBar(progressBar);
+        mostrarInterface = new MostrarInterface(this, new MenuInicial());
+        mostrarInterface.start();
+        ProgressBar pb = new ProgressBar(progressbar);
         pb.start();
     }//GEN-LAST:event_BotaoProximoActionPerformed
 
+    /**
+     * Quando as tabs são clicadas obtem-se o index da tab e atualiza-se a lista
+     * correspondente
+     *
+     * @param evt
+     */
+    private void jTabbedPane1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTabbedPane1MouseClicked
+        selecionado = jTabbedPane1.getSelectedIndex();
+
+        if (selecionado == 3) {
+            botaoAlterar.setText("Ativar");
+        }
+
+        try {
+            listas();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(Equipa.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jTabbedPane1MouseClicked
+
+    /**
+     * Desativa o botão anterior porque não há uma sequência de interfaces no
+     * menu Coloca a variável menu = true
+     */
     public void interfaceMenu() {
         BotaoAnterior.setVisible(false);
         menu = true;
@@ -370,15 +428,11 @@ public class Equipa extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Equipa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Equipa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Equipa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Equipa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+
         //</editor-fold>
 
         /* Create and display the form */
@@ -401,11 +455,13 @@ public class Equipa extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JList<String> listaAdmin;
     private javax.swing.JList<String> listaCozinha;
     private javax.swing.JList<String> listaMesa;
-    private javax.swing.JProgressBar progressBar;
+    private javax.swing.JList<String> listaNaoAtivo;
+    private javax.swing.JProgressBar progressbar;
     private javax.swing.JLabel titulo;
     // End of variables declaration//GEN-END:variables
 }

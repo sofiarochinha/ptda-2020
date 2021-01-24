@@ -1,11 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Adminstrador;
 
-import Design.Design;
+import Design.*;
 import Thread.MostrarInterface;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -13,22 +8,24 @@ import java.util.logging.Logger;
 
 
 /**
- *
+ * Menu principal do administrador
  * @author sofia
  */
 public class MenuInicial extends javax.swing.JFrame {
 
-    private final Design design;
+    private final DesignMenuInicial design;
+    private MostrarInterface mostrarInterface;
     /**
      * Creates new form MenuInicial
      */
     public MenuInicial() {
-        this.design = new Design(this);
+        this.design = new DesignMenuInicial(this);
         
         initComponents();
         
         design.titulo(titulo);
         design.BotaoCancelar(botaoTerminarSessao);
+        design.JButton(botaoProdutos, botaoMenu, botaoCategorias, botaoEquipa, botaoFaturacao);
         
     }
 
@@ -138,25 +135,33 @@ public class MenuInicial extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * O admin pode ver todos os seus produtos
+     * @param evt 
+     */
     private void botaoProdutosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoProdutosActionPerformed
         
         try {
             ProdutosAdicionados produtos = new ProdutosAdicionados();
             produtos.interfaceMenu();
-            MostrarInterface mi = new MostrarInterface(this, produtos);
-            mi.start();
+            mostrarInterface = new MostrarInterface(this, produtos);
+            mostrarInterface.start();
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(MenuInicial.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_botaoProdutosActionPerformed
 
+    /**
+     * O admin ve toda a sua equipa
+     * @param evt 
+     */
     private void botaoEquipaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoEquipaActionPerformed
          
         try {
             Equipa equipa = new Equipa();
             equipa.interfaceMenu();
-            MostrarInterface mi = new MostrarInterface(this, equipa);
-            mi.start();
+            mostrarInterface = new MostrarInterface(this, equipa);
+            mostrarInterface.start();
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(MenuInicial.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -167,8 +172,8 @@ public class MenuInicial extends javax.swing.JFrame {
         try {
             AdicionarCategoria categorias = new AdicionarCategoria();
             categorias.interfaceMenu();
-            MostrarInterface mi = new MostrarInterface(this, categorias);
-            mi.start();
+            mostrarInterface = new MostrarInterface(this, categorias);
+            mostrarInterface.start();
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(MenuInicial.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -176,9 +181,8 @@ public class MenuInicial extends javax.swing.JFrame {
 
     private void botaoTerminarSessaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoTerminarSessaoActionPerformed
         
-        Aplicacao aplicacao = new Aplicacao();
-            MostrarInterface mi = new MostrarInterface(this, aplicacao);
-            mi.start();
+        mostrarInterface= new MostrarInterface(this, new Aplicacao());
+        mostrarInterface.start();
             
             
     }//GEN-LAST:event_botaoTerminarSessaoActionPerformed

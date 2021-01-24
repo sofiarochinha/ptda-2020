@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Adminstrador;
 
 import BD.*;
@@ -15,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * Regista todos os elementos da equipa
  *
  * @author sofia
  */
@@ -22,20 +18,17 @@ public final class CadastrarEquipa extends javax.swing.JFrame {
 
     private final DesignCadastrarEquipa design;
     private final Identidade identidade;
-    
+    private MostrarInterface mostrarInterface;
+
     private boolean update, menu;
     private int ID;
 
-    /**
-     * Creates new form CadastrarEquipa
-     */
     public CadastrarEquipa() {
         this.design = new DesignCadastrarEquipa(this);
         this.identidade = new Identidade();
         this.update = false;
-        this.menu = false;
         this.ID = 0;
-        
+
         initComponents();
 
         comboboxTipoFuncionario();
@@ -79,7 +72,6 @@ public final class CadastrarEquipa extends javax.swing.JFrame {
         progressBar = new javax.swing.JProgressBar();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(900, 550));
 
         titulo.setFont(new java.awt.Font("SansSerif", 0, 36)); // NOI18N
         titulo.setText("Adicionar empregado");
@@ -114,6 +106,11 @@ public final class CadastrarEquipa extends javax.swing.JFrame {
 
         botaoCancelar.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         botaoCancelar.setText("Cancelar");
+        botaoCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botaoCancelarActionPerformed(evt);
+            }
+        });
 
         BotaoAnterior.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         BotaoAnterior.setText("Anterior");
@@ -240,6 +237,8 @@ public final class CadastrarEquipa extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BotaoProximoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoProximoActionPerformed
+        ProgressBar pb = new ProgressBar(progressBar);
+
         String tipo = null;
         switch ((String) comboboxTipoFuncionario.getSelectedItem()) {
             case "Administrador":
@@ -256,6 +255,10 @@ public final class CadastrarEquipa extends javax.swing.JFrame {
         if ("".equals(nomeFuncionario.getText())) {
             erro.setVisible(true);
             erro.setText("Tem de inserir o seu nome");
+        } //so deixa inserir o nome com letras
+        else if (!nomeFuncionario.getText().matches("^[a-zA-ZÁÂÃÀÇÉÊÍÓÔÕÚáâãàçéêíóôõú\\s]*$")) {
+            erro.setVisible(true);
+            erro.setText("Só pode inserir letras");
         } else if ("".equals(usernameFuncionario.getText())) {
             erro.setVisible(true);
             erro.setText("Tem de inserir um nome de utilizador");
@@ -267,18 +270,34 @@ public final class CadastrarEquipa extends javax.swing.JFrame {
             erro.setText("Tem de repetir a palavra-passe");
         } else {
             try {
-                String nome = nomeFuncionario.getText();
+
+                String[] partes = nomeFuncionario.getText().split(" ");
+                StringBuilder sb = new StringBuilder();
+                for (String word : partes) {
+                    if (word.length() > 2) {
+                        word = word.substring(0, 1).toUpperCase() + word.substring(1);
+                    }
+                    sb.append(" ").append(word);
+                }
+
+                String nome = sb.toString().replaceFirst(" ", "");
                 String username = usernameFuncionario.getText();
                 String passe = password.getText();
+                Equipa equipa = new Equipa();
+
                 if (update) {
 
                     if (password.getText().equals(repetirPassword.getText())) {
                         erro.setVisible(false);
                         identidade.updateFuncionario(ID, nome, username, passe, tipo);
-                        ProgressBar pb = new ProgressBar(progressBar);
-                        MostrarInterface mi = new MostrarInterface(this, new Equipa());
+
+                        if (menu) {
+                            equipa.interfaceMenu();
+                        }
+
+                        mostrarInterface = new MostrarInterface(this, equipa);
                         pb.start();
-                        mi.start();
+                        mostrarInterface.start();
 
                     } else {
                         erro.setVisible(true);
@@ -288,43 +307,54 @@ public final class CadastrarEquipa extends javax.swing.JFrame {
                     if (password.getText().equals(repetirPassword.getText()) && !identidade.verNomeUtilizadorRepetido(usernameFuncionario.getText(), tipo)) {
 
                         erro.setVisible(false);
-
                         identidade.novoFuncionario(nome, username, passe, tipo);
 
-                        ProgressBar pb = new ProgressBar(progressBar);
-                        MostrarInterface mi = new MostrarInterface(this, new Equipa());
+                        if (menu) {
+                            equipa.interfaceMenu();
+                        }
+
+                        mostrarInterface = new MostrarInterface(this, equipa);
                         pb.start();
-                        mi.start();
+                        mostrarInterface.start();
 
                     } else if (identidade.verNomeUtilizadorRepetido(usernameFuncionario.getText(), tipo)) {
                         erro.setVisible(true);
                         erro.setText("Esse nome de utilizador já existe.");
-
                     } else if (!password.getText().equals(repetirPassword.getText())) {
                         erro.setVisible(true);
                         erro.setText("As palavras-passes não correspondem.");
-
                     }
                 }
             } catch (ClassNotFoundException | SQLException ex) {
                 Logger.getLogger(CadastrarEquipa.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             update = false;
 
         }
     }//GEN-LAST:event_BotaoProximoActionPerformed
 
     private void BotaoAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotaoAnteriorActionPerformed
-        MostrarInterface mi;
         try {
-            mi = new MostrarInterface(this, new ProdutosAdicionados());
-            mi.start();
+            mostrarInterface = new MostrarInterface(this, new ProdutosAdicionados());
+            mostrarInterface.start();
         } catch (ClassNotFoundException | SQLException ex) {
-            Logger.getLogger(ProdutosAdicionados.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProdutosAdicionados.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_BotaoAnteriorActionPerformed
+
+    private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
+        if (menu) {
+            try {
+                mostrarInterface = new MostrarInterface(this, new ProdutosAdicionados());
+                mostrarInterface.start();
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(CadastrarEquipa.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+
+    }//GEN-LAST:event_botaoCancelarActionPerformed
 
     public void comboboxTipoFuncionario() {
         Object o = comboboxTipoFuncionario.getSelectedItem();
@@ -376,6 +406,7 @@ public final class CadastrarEquipa extends javax.swing.JFrame {
         BotaoProximo.setText("Adicionar");
         menu = true;
     }
+
     /**
      * @param args the command line arguments
      */

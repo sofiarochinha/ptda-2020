@@ -3,8 +3,8 @@ package Adminstrador;
 
 import BD.*;
 import Design.*;
+import Empregado_cozinha.VerPedidos;
 import Empregado_mesa.*;
-import Empregado_cozinha.*;
 import Thread.MostrarInterface;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -210,7 +210,7 @@ public class Aplicacao extends javax.swing.JFrame {
                         mi.start();
                         break;
                     case "'Cozinha'":
-                        mi = new MostrarInterface(this, new Ver_pedidos());
+                        mi = new MostrarInterface(this, new VerPedidos());
                         mi.start();
                         break;
                     default:

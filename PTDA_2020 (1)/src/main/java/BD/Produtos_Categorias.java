@@ -158,6 +158,12 @@ public class Produtos_Categorias extends VerDados {
         return nome;
     }
 
+    /**
+     * Remove uma determinada Categoria
+     * @param nome
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     public void removerCategoria(String nome) throws ClassNotFoundException, SQLException {
         int idSemCategoria = verID("Categoria", "Sem categoria");
 
@@ -185,6 +191,12 @@ public class Produtos_Categorias extends VerDados {
         super.conexao().close();
     }
     
+    /**
+     * Remove uma determinada personalizacao
+     * @param nome
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
     public void removerPersonalizacao(String nome) throws ClassNotFoundException, SQLException {
         int idSemCategoria = verID("Personalizacao", "Sem personalizacao");
 
@@ -208,6 +220,38 @@ public class Produtos_Categorias extends VerDados {
         preparedStmtDelete.setString(1, nome);
 
         preparedStmtDelete.execute();
+
+        super.conexao().close();
+    }
+    
+    /**
+     * Descricao: atualiza o produto 
+     * @param ID
+     * @param nome
+     * @param categoria
+     * @param preco
+     * @param Descricao
+     * @param iva
+     * @param personalizacao
+     * @param tempo
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
+    public void updateProduto(int ID, String nome, String categoria, double preco, String Descricao, String iva, String personalizacao, int tempo) throws ClassNotFoundException, SQLException {
+
+        String query = "update Produto set Nome = ?, ID_Categoria = ?, Preco = ?, Descricao = ?, ID_Iva = ?, ID_Personalizacao = ?, Tempo = ? where ID = ?";
+
+        PreparedStatement preparedStmtUpdate = super.conexao().prepareStatement(query);
+        preparedStmtUpdate.setString(1, nome);
+        preparedStmtUpdate.setInt(2, verID("Categoria", categoria));
+        preparedStmtUpdate.setDouble(3, preco);
+        preparedStmtUpdate.setString(4, Descricao);
+        preparedStmtUpdate.setInt(5, verID("Iva", iva));
+        preparedStmtUpdate.setInt(6, verID("Personalizacao", personalizacao));
+        preparedStmtUpdate.setInt(7, tempo);
+        preparedStmtUpdate.setInt(8, ID);
+        
+        preparedStmtUpdate.execute();
 
         super.conexao().close();
     }

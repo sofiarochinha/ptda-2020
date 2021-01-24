@@ -15,18 +15,18 @@ import javax.swing.DefaultListModel;
  */
 public class AdicionarCategoria extends javax.swing.JFrame {
 
-    private final DesignAdicionarCategoria design; 
+    private final DesignAdicionarCategoria design;
     private final Produtos_Categorias produto;
 
     private short selecao;
     private boolean menu;
-    
+
     public AdicionarCategoria() throws ClassNotFoundException, SQLException {
         initComponents();
 
         this.design = new DesignAdicionarCategoria(this);
         this.produto = new Produtos_Categorias();
-        
+
         //design dos componentes
         design.titulo(titulo);
         design.botao(adicionarCategoria, removerCategoria, botaoCancelar);
@@ -43,13 +43,16 @@ public class AdicionarCategoria extends javax.swing.JFrame {
 
     /**
      * Adiciona todas as categorias que estam na base de dados na lista
+     *
+     * @throws java.lang.ClassNotFoundException
+     * @throws java.sql.SQLException
      */
     public void categoriasLista() throws ClassNotFoundException, SQLException {
 
         DefaultListModel dlm = new DefaultListModel();
 
         String[] categorias = produto.verNome("Categoria").split("\n");
-        
+
         for (String n : categorias) {
             dlm.addElement(n);
         }
@@ -82,6 +85,11 @@ public class AdicionarCategoria extends javax.swing.JFrame {
         titulo.setText("Categorias");
 
         listaCategorias.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
+        listaCategorias.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listaCategoriasMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(listaCategorias);
 
         adicionarCategoria.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
@@ -93,7 +101,7 @@ public class AdicionarCategoria extends javax.swing.JFrame {
         });
 
         removerCategoria.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
-        removerCategoria.setText("Remove");
+        removerCategoria.setText("Remover");
         removerCategoria.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 removerCategoriaActionPerformed(evt);
@@ -169,36 +177,47 @@ public class AdicionarCategoria extends javax.swing.JFrame {
         adicionarCategoria.setText("OK");
 
         selecao += 1;
-        if (selecao == 2 && escreverCategoria.getText().equals("ex: Lanche")) {
-            erro.setVisible(true);
-            erro.setText("Nada foi alterado.");
-            selecao = 1;
-        } else {
-            try {
-                if (selecao == 2 && produto.nomeRepetido("Categoria", escreverCategoria.getText())) {
-                    produto.adicionarDados("Categoria", escreverCategoria.getText());
-                    categoriasLista();
-                    selecao = 0;
-                    erro.setVisible(false);
-                    adicionarCategoria.setText("Adicionar");
-                    escreverCategoria.setVisible(false);
-                } else if (selecao == 2) {
-                    selecao = 1;
-                    erro.setVisible(true);
-                    erro.setText("A categoria já existe.");
-                }
-            } catch (ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(AdicionarCategoria.class.getName()).log(Level.SEVERE, null, ex);
+        try {
+            if (selecao == 2 && escreverCategoria.getText().equals("ex: Lanche")) {
+                erro.setVisible(true);
+                erro.setText("Nada foi alterado.");
+                selecao = 1;
+            } else if ("".equals(escreverCategoria.getText())) {
+                erro.setVisible(true);
+                erro.setText("Tem de adicionar um nome");
+                selecao = 1;
+            } else if (selecao == 2) {
+                selecao = 1;
+                erro.setVisible(true);
+                erro.setText("A categoria já existe.");
+            } else if (selecao == 2 && produto.nomeRepetido("Categoria", escreverCategoria.getText())) {
+                produto.adicionarDados("Categoria", escreverCategoria.getText());
+                categoriasLista();
+                selecao = 0;
+                erro.setVisible(false);
+                adicionarCategoria.setText("Adicionar");
+                escreverCategoria.setVisible(false);
             }
-
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AdicionarCategoria.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+
     }//GEN-LAST:event_adicionarCategoriaActionPerformed
 
     private void removerCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerCategoriaActionPerformed
 
         try {
-            produto.removerCategoria(listaCategorias.getSelectedValue());
-            categoriasLista();
+            if ("Sem categoria".equals(listaCategorias.getSelectedValue())) {
+                erro.setVisible(true);
+                erro.setText("Nao pode eliminar");
+                selecao = 1;
+            } else {
+                erro.setVisible(false);
+                produto.removerCategoria(listaCategorias.getSelectedValue());
+                categoriasLista();
+            }
+
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(AdicionarCategoria.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -207,31 +226,29 @@ public class AdicionarCategoria extends javax.swing.JFrame {
     }//GEN-LAST:event_removerCategoriaActionPerformed
 
     private void botaoCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botaoCancelarActionPerformed
-        if(menu){            
+        if (menu) {
             MostrarInterface mi = new MostrarInterface(this, new MenuInicial());
             mi.start();
-        }else{
+        } else {
             this.setVisible(false);
             this.setDefaultCloseOperation(AdicionarCategoria.EXIT_ON_CLOSE);
             this.dispose();
         }
-        
-        
-        
-        
     }//GEN-LAST:event_botaoCancelarActionPerformed
 
-    public void interfaceMenu() {
+    private void listaCategoriasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaCategoriasMouseClicked
+        erro.setVisible(false);
+    }//GEN-LAST:event_listaCategoriasMouseClicked
 
-        
+    public void interfaceMenu() {
         botaoCancelar.setText("Menu");
         menu = true;
-
     }
-    
-    public boolean menu(){
+
+    public boolean menu() {
         return menu;
     }
+
     /**
      * @param args the command line arguments
      */
@@ -249,13 +266,17 @@ public class AdicionarCategoria extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(AdicionarCategoria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdicionarCategoria.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(AdicionarCategoria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdicionarCategoria.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(AdicionarCategoria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdicionarCategoria.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(AdicionarCategoria.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(AdicionarCategoria.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -264,7 +285,8 @@ public class AdicionarCategoria extends javax.swing.JFrame {
             try {
                 new AdicionarCategoria().setVisible(true);
             } catch (ClassNotFoundException | SQLException ex) {
-                Logger.getLogger(AdicionarCategoria.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AdicionarCategoria.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         });
     }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Adminstrador;
 
 import Design.*;
@@ -19,8 +14,8 @@ import java.util.logging.Logger;
  */
 public class Personalizacao extends javax.swing.JFrame {
 
-    private final DesignAdicionarCategoria design; 
-    private final Produtos_Categorias produto; 
+    private final DesignAdicionarCategoria design;
+    private final Produtos_Categorias produto;
     private short selecao;
 
     public Personalizacao() throws ClassNotFoundException, SQLException {
@@ -29,8 +24,7 @@ public class Personalizacao extends javax.swing.JFrame {
         this.produto = new Produtos_Categorias();
         this.design = new DesignAdicionarCategoria(this);
         this.selecao = 0;
-        
-        
+
         design.titulo(titulo);
         design.botao(adicionarPersonalizacao, removerPersonalizacao, cancelar);
         design.escrever(escreverPersonalizacao);
@@ -47,8 +41,9 @@ public class Personalizacao extends javax.swing.JFrame {
         DefaultListModel dlm = new DefaultListModel();
 
         String[] personalizacao = produto.verNome("Personalizacao").split("\n");
-        for (String n : personalizacao)
+        for (String n : personalizacao) {
             dlm.addElement(n);
+        }
 
         listaPersonalizacao.setModel(dlm);
     }
@@ -73,7 +68,6 @@ public class Personalizacao extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setName("personalizacao"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(450, 350));
 
         titulo.setFont(new java.awt.Font("SansSerif", 0, 18)); // NOI18N
         titulo.setText("Personalizacao");
@@ -83,6 +77,11 @@ public class Personalizacao extends javax.swing.JFrame {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
+        });
+        listaPersonalizacao.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listaPersonalizacaoMouseClicked(evt);
+            }
         });
         jScrollPane1.setViewportView(listaPersonalizacao);
 
@@ -173,40 +172,43 @@ public class Personalizacao extends javax.swing.JFrame {
         escreverPersonalizacao.setVisible(true);
 
         adicionarPersonalizacao.setText("OK");
-
-        if (!adicionarPersonalizacao.isSelected()) {
-            selecao += 1;
-            System.out.println(selecao);
+        try {
+            if (!adicionarPersonalizacao.isSelected()) {
+                selecao += 1;
+            }
             if (selecao == 2 && escreverPersonalizacao.getText().equals("ex: sem carne")) {
                 erro.setVisible(true);
                 erro.setText("Nada foi alterado.");
                 selecao = 1;
-            } else {
-                try {
-                    if (selecao == 2 && produto.nomeRepetido("Personalizacao", escreverPersonalizacao.getText())) {
-                        produto.adicionarDados("Personalizacao", escreverPersonalizacao.getText());
-                        personalizacaoLista();
-                        selecao = 0;
-                        erro.setVisible(false);
-                        escreverPersonalizacao.setText("Adicionar");
-                        escreverPersonalizacao.setVisible(false);
-                    } else if (selecao == 2) {
-                        selecao = 1;
-                        erro.setVisible(true);
-                        erro.setText("Já existe.");
-                    }
-                } catch (ClassNotFoundException | SQLException ex) {
-                    Logger.getLogger(AdicionarCategoria.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
+            } else if (selecao == 2 && produto.nomeRepetido("Personalizacao", escreverPersonalizacao.getText())) {
+                produto.adicionarDados("Personalizacao", escreverPersonalizacao.getText());
+                personalizacaoLista();
+                selecao = 0;
+                erro.setVisible(false);
+                escreverPersonalizacao.setText("Adicionar");
+                escreverPersonalizacao.setVisible(false);
+            } else if (selecao == 2) {
+                selecao = 1;
+                erro.setVisible(true);
+                erro.setText("Já existe.");
             }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(AdicionarCategoria.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }//GEN-LAST:event_adicionarPersonalizacaoActionPerformed
 
     private void removerPersonalizacaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removerPersonalizacaoActionPerformed
         try {
-            produto.removerPersonalizacao(listaPersonalizacao.getSelectedValue());
-            personalizacaoLista();
+            if (listaPersonalizacao.getSelectedValue().equals("Sem personalizacao")) {
+                erro.setVisible(true);
+                erro.setText("Nao pode eliminar.");
+            } else {
+                erro.setVisible(false);
+                produto.removerPersonalizacao(listaPersonalizacao.getSelectedValue());
+                personalizacaoLista();
+            }
+
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(AdicionarCategoria.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -215,9 +217,13 @@ public class Personalizacao extends javax.swing.JFrame {
 
     private void cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cancelarActionPerformed
         this.setVisible(false);
-        this.setDefaultCloseOperation(this.EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(Personalizacao.EXIT_ON_CLOSE);
         this.dispose();
     }//GEN-LAST:event_cancelarActionPerformed
+
+    private void listaPersonalizacaoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listaPersonalizacaoMouseClicked
+        erro.setVisible(false);
+    }//GEN-LAST:event_listaPersonalizacaoMouseClicked
 
     /**
      * @param args the command line arguments
@@ -236,13 +242,17 @@ public class Personalizacao extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Personalizacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Personalizacao.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Personalizacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Personalizacao.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Personalizacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Personalizacao.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Personalizacao.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Personalizacao.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 

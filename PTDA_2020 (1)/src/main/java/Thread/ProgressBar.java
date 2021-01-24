@@ -12,16 +12,17 @@ import javax.swing.JProgressBar;
  */
 public class ProgressBar extends Thread {
 
-    JProgressBar nome;
+    private JProgressBar nome;
     
     public ProgressBar(JProgressBar nome) {
         this.nome = nome;
         nome.setVisible(true);
-        nome.setStringPainted(true);
-        nome.setValue(0);
-        nome.setString(0 + "%");
+//        nome.setStringPainted(true);
+//        nome.setValue(0);
+//        nome.setString(0 + "%");
     }
   
+    
   
   @Override
   public void run() {
