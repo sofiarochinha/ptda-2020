@@ -6,6 +6,7 @@ public class Identidade extends VerDados {
 
     /**
      * Descricao: Verifica se o username e a password coincidem
+     *
      * @param tipoFuncionario
      * @param nome
      * @param pass
@@ -16,7 +17,7 @@ public class Identidade extends VerDados {
     public boolean verPassword(String tipoFuncionario, String nome, String pass) throws ClassNotFoundException, SQLException {
 
         String query = "select * from Funcionario where Funcao like ? and Situacao like ?";
-        
+
         PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
         preparedStmtSelect.setString(1, tipoFuncionario);
         preparedStmtSelect.setString(2, "Ativo");
@@ -33,6 +34,28 @@ public class Identidade extends VerDados {
         super.conexao().close();
 
         return false;
+    }
+
+    public int verID(String nomeUtilizador) throws ClassNotFoundException, SQLException {
+
+        String query = "select * from Funcionario where Nome_Utilizador like ?";
+
+        PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
+        preparedStmtSelect.setString(1, nomeUtilizador);
+        preparedStmtSelect.execute();
+
+        ResultSet rs = preparedStmtSelect.getResultSet();
+
+        while (rs.next()) {
+            if (nomeUtilizador.equals(rs.getString("Nome_Utilizador"))) {
+                return rs.getInt("ID");
+            }
+        }
+
+        super.conexao().close();
+
+        return 0;
+
     }
 
     /**
@@ -53,10 +76,11 @@ public class Identidade extends VerDados {
         preparedStmtSelect.setString(1, Funcao);
         preparedStmtSelect.execute();
         ResultSet rs = preparedStmtSelect.getResultSet();
-        
+
         while (rs.next()) {
-            if (nomeUtilizador.equals(rs.getString("Nome_Utilizador")))
+            if (nomeUtilizador.equals(rs.getString("Nome_Utilizador"))) {
                 return true;
+            }
         }
 
         super.conexao().close();
@@ -94,13 +118,14 @@ public class Identidade extends VerDados {
 
     /**
      * Altera os dados de um funcionario
+     *
      * @param ID
      * @param nome
      * @param nomeUtilizador
      * @param palavraPasse
      * @param Funcao
      * @throws ClassNotFoundException
-     * @throws SQLException 
+     * @throws SQLException
      */
     public void updateFuncionario(int ID, String nome, String nomeUtilizador, String palavraPasse, String Funcao) throws ClassNotFoundException, SQLException {
 
@@ -124,12 +149,12 @@ public class Identidade extends VerDados {
         preparedStmtUpdate.setString(3, palavraPasse);
         preparedStmtUpdate.setString(4, Funcao);
         preparedStmtUpdate.setInt(5, ID);
-        
+
         preparedStmtUpdate.execute();
 
         super.conexao().close();
     }
-    
+
     /**
      * Descricao: Adiciona um novo funcionario à BD
      *
@@ -166,7 +191,7 @@ public class Identidade extends VerDados {
 
         super.conexao().close();
     }
-    
+
     /**
      * Descricao: devolve o nome dos funcionario de uma determinada funcao
      *
@@ -196,16 +221,17 @@ public class Identidade extends VerDados {
 
     /**
      * Retorna os funcionarios que não estam ativos
+     *
      * @return funcionarios.toString()
      * @throws ClassNotFoundException
-     * @throws SQLException 
+     * @throws SQLException
      */
     public String verFuncionarioNaoAtivo() throws ClassNotFoundException, SQLException {
         StringBuilder funcionarios = new StringBuilder();
         String query = "select * from Funcionario where Situacao like 'Não ativo'";
 
         PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
-       
+
         preparedStmtSelect.execute();
 
         ResultSet rs = preparedStmtSelect.getResultSet();
@@ -220,10 +246,11 @@ public class Identidade extends VerDados {
 
     /**
      * Descricao: desativa uma conta da base de dados
+     *
      * @param nome
      * @param Funcao
      * @throws ClassNotFoundException
-     * @throws SQLException 
+     * @throws SQLException
      */
     public void removerFuncionario(String nome, String Funcao) throws ClassNotFoundException, SQLException {
 
@@ -233,17 +260,18 @@ public class Identidade extends VerDados {
         preparedStmtDelete.setString(1, "Não ativo");
         preparedStmtDelete.setString(2, nome);
         preparedStmtDelete.setString(3, Funcao);
-       
+
         preparedStmtDelete.execute();
-        
+
         super.conexao().close();
     }
-    
+
     /**
      * Descricao: ativa uma conta da base de dados
+     *
      * @param nomeUtilizador
      * @throws ClassNotFoundException
-     * @throws SQLException 
+     * @throws SQLException
      */
     public void ativarFuncionario(String nomeUtilizador) throws ClassNotFoundException, SQLException {
 
@@ -252,18 +280,19 @@ public class Identidade extends VerDados {
         PreparedStatement preparedStmtUpdate = super.conexao().prepareStatement(query);
         preparedStmtUpdate.setString(1, "Ativo");
         preparedStmtUpdate.setString(2, nomeUtilizador);
-       
+
         preparedStmtUpdate.execute();
-        
+
         super.conexao().close();
     }
-    
+
     /**
      * Descricao: retorna todos os dados do funcionario
+     *
      * @param nome
      * @return StringBuilder funcionario
      * @throws ClassNotFoundException
-     * @throws SQLException 
+     * @throws SQLException
      */
     public String dadosCadaFuncionario(String nome) throws ClassNotFoundException, SQLException {
         StringBuilder funcionario = new StringBuilder();

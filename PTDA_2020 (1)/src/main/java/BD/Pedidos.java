@@ -1,5 +1,6 @@
 package BD;
 
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,6 +10,8 @@ import java.sql.SQLException;
  * @author HP
  */
 public class Pedidos extends VerDados{
+   
+    
     /**
      * Retorna todos os pedidos que estam para confecionar
      * @return
@@ -20,7 +23,7 @@ public class Pedidos extends VerDados{
         String query = "select * from Pedido where Estado like ?";
 
         PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
-        preparedStmtSelect.setString(1, "A confecionar");
+        preparedStmtSelect.setBoolean(1, true);
         preparedStmtSelect.execute();
 
         ResultSet rs = preparedStmtSelect.getResultSet();
@@ -33,6 +36,83 @@ public class Pedidos extends VerDados{
 
         return sb.toString();
     }
+    
+    /**
+     * 
+     * @param idPedido
+     * @param mesa
+     * @return 
+     * @throws java.lang.ClassNotFoundException 
+     * @throws java.sql.SQLException 
+     */
+    public int precoTotalPedido(int mesa) throws ClassNotFoundException, SQLException {
+        int preco = 0;
+        int idPedido = 0;
+        
+        String query = "select * from Pedido where Mesa = ?";
+        
+        PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
+        preparedStmtSelect.setInt(1, mesa);
+        preparedStmtSelect.execute();
+        
+        ResultSet rs = preparedStmtSelect.getResultSet();
+        
+        while (rs.next()) {
+            
+            idPedido = rs.getInt("Mesa");
+            
+        }
+        
+        
+        query = "select * from Produtos_Pedido where ID_Pedido = ?";
+
+        preparedStmtSelect = super.conexao().prepareStatement(query);
+        preparedStmtSelect.setInt(1, idPedido);
+        preparedStmtSelect.execute();
+
+        while (rs.next()) {
+            
+            preco = preco + rs.getInt("Preco");
+            
+        }
+
+        super.conexao().close();
+        return preco;
+    }
+    
+    /**
+     * Insere um novo pedido na base de dados
+     * @param precoTotal
+     * @param mesa
+     * @param ID_Funcionario
+     * @param data
+     * 
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
+     public void inserir_Pedido(int precoTotal, int mesa, int ID_Funcionario, Date data) throws ClassNotFoundException, SQLException{
+        StringBuilder sb = new StringBuilder();
+        String query = "INSERT INTO Pedido (Preco_total, Mesa, ID_Funcionario, Data)" + " value (?,?,?,?)";
+
+        PreparedStatement preparedStmtUpdate = super.conexao().prepareStatement(query);
+        preparedStmtUpdate.setDouble(1, precoTotalPedido(mesa));
+        preparedStmtUpdate.setInt(2, mesa);
+        preparedStmtUpdate.setInt(3, ID_Funcionario);
+        preparedStmtUpdate.setDate(4, data);
+        
+        PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
+        preparedStmtSelect.execute();
+
+        ResultSet rs = preparedStmtSelect.getResultSet();
+
+        while (rs.next()) {
+            sb.append(rs.getString("Mesa")).append(" ");
+        }
+        
+        super.conexao().close();
+    }
+    
+   
     
     
     /**

@@ -201,7 +201,10 @@ public class Aplicacao extends javax.swing.JFrame {
 
                 switch (tipoFuncionario) {
                     case "'Mesa'":
-                        MostrarInterface mi = new MostrarInterface(this, new Ver_mesa());
+                        int id = identidade.verID(escreverUsername.getText());
+                        pedir_pedido pedido = new pedir_pedido();
+                        pedido.setIDFuncionario(id);
+                        MostrarInterface mi = new MostrarInterface(this, pedido);
                         mi.start();
                         break;
 

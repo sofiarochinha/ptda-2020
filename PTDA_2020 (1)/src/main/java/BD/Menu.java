@@ -38,7 +38,6 @@ public class Menu extends VerDados {
         return tempo;
     }
 
-    
     /**
      * Descricao: retorna o nome de todos os Menus
      *
@@ -186,7 +185,7 @@ public class Menu extends VerDados {
      * @throws ClassNotFoundException
      */
     public String verIDProdutoDoMenu(String menu) throws SQLException, ClassNotFoundException {
-        
+
         StringBuilder sb = new StringBuilder();
         System.out.println(menu);
         if ("".equals(menu)) {
@@ -220,25 +219,29 @@ public class Menu extends VerDados {
         } else {
 
             for (String n : produtos) {
+                if (n.equals("")) {
+                    return "";
+                } else {
+                    String query = "select * from Produto where ID = ?";
 
-                String query = "select * from Produto where ID = ?";
+                    PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
+                    preparedStmtSelect.setInt(1, Integer.parseInt(n));
+                    preparedStmtSelect.execute();
 
-                PreparedStatement preparedStmtSelect = super.conexao().prepareStatement(query);
-                preparedStmtSelect.setInt(1, Integer.parseInt(n));
-                preparedStmtSelect.execute();
+                    ResultSet rs = preparedStmtSelect.getResultSet();
 
-                ResultSet rs = preparedStmtSelect.getResultSet();
-
-                while (rs.next()) {
-                    sb.append(rs.getString("Nome")).append("\n");
-                    if(rs.getInt("Tempo") > tempo){
-                        tempo = rs.getInt("Tempo");
-                        System.out.println(tempo);
+                    while (rs.next()) {
+                        sb.append(rs.getString("Nome")).append("\n");
+                        if (rs.getInt("Tempo") > tempo) {
+                            tempo = rs.getInt("Tempo");
+                            System.out.println(tempo);
+                        }
                     }
-                }
 
+                }
+                super.conexao().close();
             }
-            super.conexao().close();
+
         }
 
         return sb.toString();
@@ -277,8 +280,6 @@ public class Menu extends VerDados {
         super.conexao().close();
 
     }
-    
-   
 
     /**
      * Desassocia o menu dos produtos
