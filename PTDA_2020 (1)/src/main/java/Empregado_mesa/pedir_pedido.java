@@ -23,6 +23,8 @@ public class pedir_pedido extends javax.swing.JFrame{
     private final Produtos_Categorias produto;
     private final DefaultListModel dm;
     private int idFuncionario;
+    private final Pedidos pedido;
+    
     /**
      * Creates new form pedir_pedido
      * @throws java.lang.ClassNotFoundException
@@ -33,6 +35,7 @@ public class pedir_pedido extends javax.swing.JFrame{
         this.categoria = new Categoria();
         this.produto = new Produtos_Categorias();
         this.dm = new DefaultListModel();
+        this.pedido = new Pedidos();
         
         String[] categorias = categoria.verCategoria().split(" ");
         setLayout(null);
@@ -158,7 +161,24 @@ public class pedir_pedido extends javax.swing.JFrame{
     }//GEN-LAST:event_btn_removerActionPerformed
 
     private void btn_confActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_confActionPerformed
-        
+            
+        double preco = 0;
+            
+        try {
+            String[] nome = pedido.idProdutos(4).split("\n");
+            for(String n : nome){
+                preco = pedido.precoTotal(Integer.parseInt(n));
+                
+            }
+            
+            pedido.inserir_Pedido(preco, 4, idFuncionario);
+            System.out.println(lista_ped.getModel());    
+            
+            
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(pedir_pedido.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
     }//GEN-LAST:event_btn_confActionPerformed
    /**
     * Evento do botão de categoria

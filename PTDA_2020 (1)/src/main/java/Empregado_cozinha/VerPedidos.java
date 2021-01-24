@@ -244,7 +244,7 @@ public class VerPedidos extends javax.swing.JFrame {
 
     private void prontoBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prontoBotaoActionPerformed
         String[] mesa = pedidosLista.getSelectedValue().split(" ");
-
+        
         try {
             int idPedido = pedido.verID(Integer.parseInt(mesa[1]));
             pedido.pedidoPronto(idPedido);
@@ -310,7 +310,7 @@ public class VerPedidos extends javax.swing.JFrame {
         };
 
         if (tempo > 0) {
-            long delay = 1000;
+            long delay = 1000*3600;
             temporizador.schedule(task, delay);
         }
         if (tempo == 2) {
