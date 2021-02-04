@@ -33,6 +33,8 @@ public class Ver_mesa extends javax.swing.JFrame {
     Pedidos Pedidos = new Pedidos();
     
     public Ver_mesa() throws ClassNotFoundException, SQLException {
+        final int botao;
+        
         initComponents();
         int x = 0;
         int y = 80;
@@ -48,14 +50,27 @@ public class Ver_mesa extends javax.swing.JFrame {
             }
             b.setBounds(x, y, 75, 75);
             b.setActionCommand(mesas[i]);
-            b.addActionListener( new ActionListener() {				
-               public void actionPerformed(ActionEvent e) {
+            
+            b.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
                     // e.getActionCommand() vai retornar o nome do botao que vc clicou.
                     System.out.println("Button clicked: " + e.getActionCommand());
-                    //MostrarInterface mi = new MostrarInterface(this, new pedir_pedido());
-		}
-               
-            });			
+                    int botao = Integer.parseInt(e.getActionCommand());
+                    pedir_pedido pedido;
+                    try {
+                        pedido = new pedir_pedido();
+                        
+                         pedido.setNumMesa(botao);
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        Logger.getLogger(Ver_mesa.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+            
+            
+            MostrarInterface mi = new MostrarInterface(this, new pedir_pedido());
+            
             add(b);
             if ((i+1) % 10 != 0){
                 x= x + 90; 
@@ -132,17 +147,13 @@ public class Ver_mesa extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                
-                try {
-                    new Ver_mesa().setVisible(true);
-                } catch (ClassNotFoundException ex) {
-                    Logger.getLogger(Ver_mesa.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (SQLException ex) {
-                    Logger.getLogger(Ver_mesa.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                
+        java.awt.EventQueue.invokeLater(() -> {
+            try {
+                new Ver_mesa().setVisible(true);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Ver_mesa.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(Ver_mesa.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
     }

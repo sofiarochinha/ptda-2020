@@ -22,7 +22,7 @@ public class pedir_pedido extends javax.swing.JFrame{
     private final Categoria categoria;
     private final Produtos_Categorias produto;
     private final DefaultListModel dm;
-    private int idFuncionario;
+    private int idFuncionario, numMesa;
     private final Pedidos pedido;
     
     /**
@@ -172,7 +172,7 @@ public class pedir_pedido extends javax.swing.JFrame{
                 
             }
             
-            pedido.inserir_Pedido(preco, 4, idFuncionario);
+            pedido.inserir_Pedido(preco, numMesa, idFuncionario);
    
             
         } catch (ClassNotFoundException | SQLException ex) {
@@ -213,6 +213,10 @@ public class pedir_pedido extends javax.swing.JFrame{
         
         this.idFuncionario = idFuncionario;
         
+    }
+    
+    public void setNumMesa(int numMesa){
+        this.numMesa = numMesa;
     }
     
     /**
