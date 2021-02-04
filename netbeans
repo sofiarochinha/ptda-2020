@@ -27,7 +27,7 @@ For windows:
 2. database -> new conection
 3. download conector java and add to netbeans
 	path for linux: /usr/share/java/mysql-connector-java-8.0.17.jar
-	pah for windows: i dont know
+	pah for windows: C:\Program Files (x86)\MySQL\Connector J 8.0\mysql-connector-java-8.0.23.jar
 	
 	host: estga-dev.clients.ua.pt
 	username: ptda-2020-gr1
